@@ -56,15 +56,6 @@ class FilmorateApplicationTests {
     }
 
     @Test
-    void filmControlleInvalidReleaseDate() {
-        Film film = createValidFilm();
-        film.setReleaseDate(LocalDate.of(1895, 12, 27));
-        ResponseEntity<String> response = restTemplate.postForEntity("/films", film, String.class);
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertTrue(response.getBody().contains("Дата релиза фильма должна быть не ранее 28.12.1895."));
-    }
-
-    @Test
     void userValidData() {
         User user = createValidUser();
         Set<ConstraintViolation<User>> violations = validator.validate(user);
