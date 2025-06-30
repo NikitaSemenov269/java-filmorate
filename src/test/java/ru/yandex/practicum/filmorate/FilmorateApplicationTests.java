@@ -20,7 +20,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-class FilmAndUserValidationTest {
+class FilmorateApplicationTests {
 
     @Autowired
     private TestRestTemplate restTemplate;
