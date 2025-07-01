@@ -43,7 +43,7 @@ public class FilmController {
     public Film update(@RequestBody @Valid Film newFilm) {
         log.info("Обновление данных фильма.");
         try {
-            if (newFilm.getId() == null || films.containsKey(newFilm.getId())) {
+            if (newFilm.getId() == null || !films.containsKey(newFilm.getId())) {
                 log.error("Фильма с таким id не существует {}", newFilm.getId());
                 throw new NotFoundException("Фильм с id: " + newFilm.getId() + " не найден.");
             }
