@@ -42,7 +42,7 @@ public class UserController {
             return user;
         } catch (RuntimeException e) {
             log.error("Ошибка при попытке создания пользователя.");
-            throw new RuntimeException(e);
+            throw e;
         }
     }
 
@@ -76,7 +76,7 @@ public class UserController {
             return user;
         } catch (RuntimeException e) {
             log.error("Ошибка при попытке обновления пользователя.");
-            throw new RuntimeException(e);
+            throw e;
         }
     }
 
@@ -87,7 +87,7 @@ public class UserController {
             return users.values();
         } catch (RuntimeException e) {
             log.error("Ошибка при попытке получения списка пользователей.");
-            throw new RuntimeException(e);
+            throw e;
         }
     }
 

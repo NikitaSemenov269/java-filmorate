@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.controller;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exception.DuplicatedDataException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 
@@ -34,7 +35,7 @@ public class FilmController {
             return film;
         } catch (RuntimeException e) {
             log.error("Ошибка при попытке создания фильма.");
-            throw new RuntimeException(e);
+            throw e;
         }
     }
 
@@ -45,6 +46,10 @@ public class FilmController {
             if (newFilm.getId() == null || films.containsKey(newFilm.getId())) {
                 log.error("Фильма с таким id не существует {}", newFilm.getId());
                 throw new NotFoundException("Фильм с id: " + newFilm.getId() + " не найден.");
+            }
+            if (films.values().stream().anyMatch(film -> film.getName().equalsIgnoreCase(newFilm.getName()))) {
+                log.error("Такое название уже существует: {}", newFilm.getName());
+                throw new DuplicatedDataException("Фильм с таким названием уже существует");
             }
             Film film = films.get(newFilm.getId());
             Optional.ofNullable(newFilm.getReleaseDate()).ifPresent(film::setReleaseDate);
@@ -59,7 +64,7 @@ public class FilmController {
             return film;
         } catch (RuntimeException e) {
             log.error("Ошибка при попытке обновления фильма.");
-            throw new RuntimeException(e);
+            throw e;
         }
     }
 
@@ -70,7 +75,7 @@ public class FilmController {
             return films.values();
         } catch (RuntimeException e) {
             log.error("Ошибка при попытке получения списка всех фильмов.");
-            throw new RuntimeException(e);
+            throw e;
         }
     }
 
