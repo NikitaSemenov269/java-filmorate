@@ -12,7 +12,6 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -20,7 +19,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-class FilmorateApplicationTests {
+class FilmControllerTests {
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -55,27 +54,6 @@ class FilmorateApplicationTests {
         assertNotNull(response.getBody().getId());
     }
 
-    @Test
-    void userValidData() {
-        User user = createValidUser();
-        Set<ConstraintViolation<User>> violations = validator.validate(user);
-        assertTrue(violations.isEmpty());
-    }
-
-    @Test
-    void userInvalidEmail() {
-        User user = createValidUser();
-        user.setEmail("invalid-email");
-        assertSingleViolation(user, "Некорректный формат email.");
-    }
-
-    @Test
-    void userCreateValidUser() {
-        User user = createValidUser();
-        ResponseEntity<User> response = restTemplate.postForEntity("/users", user, User.class);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(response.getBody().getId());
-    }
 
     private Film createValidFilm() {
         Film film = new Film();
@@ -84,14 +62,6 @@ class FilmorateApplicationTests {
         film.setReleaseDate(LocalDate.of(2000, 1, 1));
         film.setDuration(120);
         return film;
-    }
-
-    private User createValidUser() {
-        User user = new User();
-        user.setEmail("valid@test.com");
-        user.setLogin("validLogin");
-        user.setBirthday(LocalDate.of(2000, 1, 1));
-        return user;
     }
 
     private <T> void assertSingleViolation(T object, String expectedMessage) {

@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.DuplicatedDataException;
@@ -55,7 +56,7 @@ public class FilmController {
             Optional.ofNullable(newFilm.getReleaseDate()).ifPresent(film::setReleaseDate);
             if (newFilm.getReleaseDate().isBefore(MIN_RELEASE_DATE)) {
                 log.error("Некорректная дата релиза {}", film.getReleaseDate());
-                throw new ClassCastException("Дата релиза фильма должна быть не ранее 28.12.1895.");
+                throw new ValidationException("Дата релиза фильма должна быть не ранее 28.12.1895.");
             }
             Optional.ofNullable(newFilm.getName()).ifPresent(film::setName);
             Optional.ofNullable(newFilm.getDescription()).ifPresent(film::setDescription);
