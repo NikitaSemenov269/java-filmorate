@@ -19,7 +19,6 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-
 public class UserControllerTests {
     @Autowired
     private TestRestTemplate restTemplate;
@@ -56,8 +55,10 @@ public class UserControllerTests {
 
     private User createValidUser() {
         User user = new User();
+        user.setId(1); // Добавляем ID
         user.setEmail("valid@test.com");
         user.setLogin("validLogin");
+        user.setName("TestUser");
         user.setBirthday(LocalDate.of(2000, 1, 1));
         return user;
     }
