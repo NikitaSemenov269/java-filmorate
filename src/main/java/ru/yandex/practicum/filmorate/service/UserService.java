@@ -3,14 +3,12 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exception.DuplicatedDataException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -20,55 +18,100 @@ public class UserService {
 
     private final UserStorage userStorage;
 
-    public User addNewFriend(Integer idUser, Integer idFriend) {
-        log.info("Попытка добавления друга: {} для пользователя: {}", idFriend, idUser);
-        if (idUser == null || idUser <= 0 || idFriend == null || idFriend <= 0) {
-            throw new ValidationException("Некорректное значение id.");
+    public User createUser(User newUser) {
+        if (newUser.getName() == null || newUser.getName().isBlank()) {
+            newUser.setName(newUser.getLogin());
         }
+        if (newUser.getId() == null) {
+            newUser.setId(getNextId());
+        }
+        checkDuplicateLoginUser(newUser);
+        checkDuplicateEmailUser(newUser);
+        userStorage.addUser(newUser);
+        log.info("Создан новой пользователь: {}", newUser.getId());
+        return newUser;
+    }
 
-        userStorage.getUserForId(idUser).addNewFriend(idFriend);
-        userStorage.getUserForId(idFriend).addNewFriend(idUser);
+    public User updateUser(User updatingUser) {
+        if (userStorage.getUserForId(updatingUser.getId()) == null) {
+            throw new NotFoundException("Пользователя с таким id не существует.");
+        }
+        return userStorage.updateUser(updatingUser);
+    }
+
+    public User addNewFriend(Integer idUser, Integer idFriend) {
+        if (idUser.equals(idFriend)) {
+            throw new DuplicatedDataException("Пользователь не может быть другом самому себе.");
+        }
+        userStorage.getUserForId(idUser).getFriendsId().add(idFriend);
+        userStorage.getUserForId(idFriend).getFriendsId().add(idUser);
         return userStorage.getUserForId(idUser);
     }
 
-    public void deleteFriendById(Integer idUser, Integer idFriend) {
-        log.info("Попытка удаления друга: {} для пользователя: {}", idFriend, idUser);
-        if (idUser == null || idUser <= 0 || idFriend == null || idFriend <= 0) {
-            throw new ValidationException("Некорректное значение id пользователя.");
-        }
-        if (userStorage.getUserForId(idUser) == null) {
+    public Collection<User> findAll() {
+        return userStorage.findAll();
+    }
+
+    public void deleteUser(Integer id) {
+        if (userStorage.getUserForId(id) == null) {
             throw new NotFoundException("Пользователя с таким id не существует.");
         }
-        userStorage.getUserForId(idUser).deleteFriend(idFriend);
-        userStorage.getUserForId(idFriend).deleteFriend(idUser);
+        userStorage.deleteUser(id);
+    }
+
+    public void deleteFriendById(Integer idUser, Integer idFriend) {
+        if (userStorage.getUserForId(idUser) == null || userStorage.getUserForId(idFriend) == null) {
+            throw new NotFoundException("Пользователя с таким id не существует.");
+        }
+        userStorage.getUserForId(idFriend).getFriendsId().remove(idUser);
+        userStorage.getUserForId(idUser).getFriendsId().remove(idFriend);
     }
 
     public List<User> getAllFriendsById(Integer idUser) {
-        log.info("Попытка получения всех друзей пользователя: {}", idUser);
-        if (idUser == null || idUser <= 0) {
-            throw new ValidationException("Некорректное значение id пользователя.");
-        }
         if (userStorage.getUserForId(idUser) == null) {
             throw new NotFoundException("Пользователя с таким id не существует.");
         }
-        return userStorage.getUserForId(idUser).getIdAllfriends().stream()
+        return userStorage.getUserForId(idUser).getFriendsId().stream()
                 .filter(Objects::nonNull)
                 .map(userStorage::getUserForId)
                 .collect(Collectors.toList());
     }
 
     public List<User> getMutualFriends(Integer idUser, Integer idFriend) {
-        log.info("Попытка получения общих друзей пользователей: {} и {}", idUser, idFriend);
-        if (idUser == null || idUser <= 0 || idFriend == null || idFriend <= 0) {
-            throw new ValidationException("Некорректное значение id пользователя.");
+        if (userStorage.getUserForId(idUser) == null || userStorage.getUserForId(idFriend) == null) {
+            throw new NotFoundException("Пользователя с таким id не существует.");
         }
-        Set<Integer> friendsOfUser = userStorage.getUserForId(idUser).getIdAllfriends();
-        Set<Integer> friendsOfFriend = userStorage.getUserForId(idFriend).getIdAllfriends();
+        Set<Integer> friendsOfUser = userStorage.getUserForId(idUser).getFriendsId();
+        Set<Integer> friendsOfFriend = userStorage.getUserForId(idFriend).getFriendsId();
 
         return friendsOfUser.stream()
                 .filter(Objects::nonNull)
                 .filter(friendsOfFriend::contains)
                 .map(userStorage::getUserForId)
                 .collect(Collectors.toList());
+    }
+
+    private void checkDuplicateLoginUser(User newUser) {
+        if (userStorage.findAll().stream()
+                .anyMatch(user1 -> user1.getLogin().equals(newUser.getLogin()))) {
+            log.error("Пользователь с таким логином уже существует: {}", newUser.getLogin());
+            throw new DuplicatedDataException("Login " + newUser.getLogin() + " уже занят.");
+        }
+    }
+
+    private void checkDuplicateEmailUser(User newUser) {
+        if (userStorage.findAll().stream()
+                .anyMatch(user1 -> user1.getEmail().equalsIgnoreCase(newUser.getEmail()))) {
+            log.error("Пользователь с таким email уже создан: {}", newUser.getEmail());
+            throw new DuplicatedDataException("Email " + newUser.getEmail() + " уже занят.");
+        }
+    }
+
+    private Integer getNextId() {
+        return userStorage.findAll()
+                .stream()
+                .mapToInt(User::getId)
+                .max()
+                .orElse(0) + 1;
     }
 }
