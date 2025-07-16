@@ -5,11 +5,13 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Slf4j
 @Data
 public class User {
-    @Positive(message = "Id должно быть положительным числом.")
+    @Min(value = 1, message = "Id должно быть положительным числом.")
     private Integer id;
     @NotBlank(message = "Email не может быть пустой строкой.")
     @Email(message = "Некорректный формат email.")
@@ -21,6 +23,8 @@ public class User {
     private String name;
     @Past(message = "Дата рождения не должна быть в настоящем, или будущем.")
     private LocalDate birthday;
+    private Set<Integer> friendsId = new HashSet<>();
 }
+
 
 

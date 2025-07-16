@@ -1,101 +1,91 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.DuplicatedDataException;
-import ru.yandex.practicum.filmorate.exception.NotFoundException;
+
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 
 @Slf4j
 @RestController
 @RequestMapping("/users")
+@RequiredArgsConstructor
 public class UserController {
 
-    private final Map<Integer, User> users = new HashMap<>();
+    private final UserService userService;
 
     @PostMapping
-    public User create(@RequestBody @Valid User user) {
-        log.info("Попытка создание нового пользователя: {}", user.getEmail());
-        try {
-            if (users.values().stream().anyMatch(user1 -> user1.getLogin().equals(user.getLogin()))) {
-                log.error("Пользователь с таким логином уже создан: {}", user.getLogin());
-                throw new DuplicatedDataException("Login " + user.getLogin() + " уже занят.");
-            }
-            if (users.values().stream().anyMatch(user1 -> user1.getEmail().equalsIgnoreCase(user.getEmail()))) {
-                log.error("Пользователь с таким email уже создан: {}", user.getEmail());
-                throw new DuplicatedDataException("Email " + user.getEmail() + " уже занят.");
-            }
-            if (user.getName() == null || user.getName().isBlank()) {
-                user.setName(user.getLogin());
-            }
-
-            user.setId(getNextId());
-
-            users.put(user.getId(), user);
-            log.info("Создан новой пользователь: {}", user.getId());
-            return user;
-        } catch (RuntimeException e) {
-            log.error("Ошибка при попытке создания пользователя.");
-            throw e;
-        }
+    public User create(@RequestBody @Valid User newUser) {
+        log.info("Попытка создания пользователя: {}", newUser.getLogin());
+        return userService.createUser(newUser);
     }
 
     @PutMapping
     public User update(@RequestBody @Valid User newUser) {
-        log.info("Обновление данных пользователя");
-        try {
-            if (newUser.getId() == null || !users.containsKey(newUser.getId())) {
-                log.error("Пользователь с таким id не существует {}", newUser.getId());
-                throw new NotFoundException("Пользователь с id: " + newUser.getId() + " не найден.");
-            }
-            User user = users.get(newUser.getId());
-        if (!newUser.getLogin().equals(user.getLogin()) && users.values().stream()
-        .anyMatch(user1 -> user1.getLogin().equals(newUser.getLogin()))) {
-            log.error("Пользователь с таким логином уже создан: {}", user.getLogin());
-            throw new DuplicatedDataException("Login " + user.getLogin() + " уже занят.");
+        log.info("Попытка обновления данных пользователя: {}", newUser.getId());
+        if (newUser.getId() == null || newUser.getId() <= 0) {
+            throw new ValidationException("Некорректное значение id.");
         }
-        if (!newUser.getEmail().equals(user.getEmail()) && users.values().stream()
-        .anyMatch(user1 -> user1.getEmail().equalsIgnoreCase(newUser.getEmail()))) {
-            log.error("Пользователь с таким email уже создан: {}", user.getEmail());
-            throw new DuplicatedDataException("Email " + user.getEmail() + " уже занят.");
-        }
+        return userService.updateUser(newUser);
+    }
 
-            Optional.ofNullable(newUser.getLogin()).ifPresent(user::setLogin);
-            Optional.ofNullable(newUser.getEmail()).ifPresent(user::setEmail);
-            Optional.ofNullable(newUser.getBirthday()).ifPresent(user::setBirthday);
-            Optional.ofNullable(newUser.getName())
-                    .ifPresentOrElse(user::setName, () -> user.setName(newUser.getLogin()));
-
-            log.info("Успешное обновление данных пользователя: {}", user.getId());
-            return user;
-        } catch (RuntimeException e) {
-            log.error("Ошибка при попытке обновления пользователя.");
-            throw e;
+    @PutMapping("/{id}/friends/{idFriend}")
+    public User addNewFriendForId(@PathVariable Integer id,
+                                  @PathVariable Integer idFriend) {
+        log.info("Попытка добавления друга: {} для пользователя: {}", idFriend, id);
+        if (id == null || id <= 0 || idFriend == null || idFriend <= 0) {
+            throw new ValidationException("Некорректное значение id.");
         }
+        return userService.addNewFriend(id, idFriend);
     }
 
     @GetMapping
     public Collection<User> findAll() {
-        log.info("Получение всех пользователей в количестве: {}", users.size());
-        try {
-            return users.values();
-        } catch (RuntimeException e) {
-            log.error("Ошибка при попытке получения списка пользователей.");
-            throw e;
-        }
+        log.info("Попытка получения списка всех пользователей.");
+        return userService.findAll();
     }
 
-    private Integer getNextId() {
-        return users.keySet()
-                .stream()
-                .mapToInt(id -> id)
-                .max()
-                .orElse(0) + 1;
+    @GetMapping("/{id}/friends")
+    public Collection<User> getAllFriendsForId(@PathVariable Integer id) {
+        log.info("Попытка получения всех друзей пользователя: {}", id);
+        if (id == null || id <= 0) {
+            throw new ValidationException("Некорректное значение id.");
+        }
+        return userService.getAllFriendsById(id);
+    }
+
+    @GetMapping("/{id}/friends/common/{otherId}")
+    public Collection<User> getMutualFriends(
+            @PathVariable Integer id,
+            @PathVariable Integer otherId) {
+        log.info("Попытка получения общих друзей пользователей: {} и {}", id, otherId);
+        if (id == null || id <= 0 || otherId == null || otherId <= 0) {
+            throw new ValidationException("Некорректное значение id.");
+        }
+        return userService.getMutualFriends(id, otherId);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Integer id) {
+        log.info("Попытка удаления пользователя: {}", id);
+        if (id == null || id <= 0) {
+            throw new ValidationException("Некорректное значение id.");
+        }
+        userService.deleteUser(id);
+    }
+
+    @DeleteMapping("/{id}/friends/{friendId}")
+    public void deleteFriendsById(@PathVariable Integer id,
+                                  @PathVariable Integer friendId) {
+        log.info("Попытка удаления друга пользователя: {}", id);
+        if (id == null || id <= 0) {
+            throw new ValidationException("Некорректное значение id.");
+        }
+        userService.deleteFriendById(id, friendId);
     }
 }

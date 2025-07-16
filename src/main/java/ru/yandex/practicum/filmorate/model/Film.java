@@ -5,11 +5,13 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Slf4j
 @Data
 public class Film {
-    @Positive(message = "Id должно быть положительным числом.")
+    @Min(value = 1, message = "Id должно быть положительным числом.")
     private Integer id;
     @NotBlank(message = "Название обязательно для заполнения.")
     private String name;
@@ -19,4 +21,6 @@ public class Film {
     private LocalDate releaseDate;
     @Min(value = 1, message = "Длительность должна быть не менее 1 минуты.")
     private Integer duration;
+    private Set<Integer> idUsersWhoLiked = new HashSet<>();
 }
+
