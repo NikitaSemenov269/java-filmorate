@@ -23,7 +23,7 @@ public class User {
     private String name;
     @Past(message = "Дата рождения не должна быть в настоящем, или будущем.")
     private LocalDate birthday;
-    private Set<Integer> friendsId = new HashSet<>();
+    private Set<Role> idFriends = new HashSet<>();
 }
 
 
