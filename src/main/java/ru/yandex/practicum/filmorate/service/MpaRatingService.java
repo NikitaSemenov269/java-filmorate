@@ -19,6 +19,7 @@ public class MpaRatingService {
         return mpaRepository.findMpaById(mpaId)
                 .orElseThrow(() -> new NotFoundException("Рейтинг с таким ID: " + mpaId + " не найден."));
     }
+
     public List<MpaRating> findAllMpa() {
         return mpaRepository.findAllMpa();
     }
