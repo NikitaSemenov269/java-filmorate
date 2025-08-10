@@ -30,6 +30,7 @@ public class UserService {
         return userRepository.getUserById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь с ID " + userId + " не найден."));
     }
+
     public User createUser(User user) {
         log.info("Попытка создания нового пользователя: email={}, login={}", user.getEmail(), user.getLogin());
         if (user.getName() == null || user.getName().isBlank()) {
@@ -39,6 +40,7 @@ public class UserService {
         log.info("Создан пользователь с ID: {}", createdUser.getId());
         return createdUser;
     }
+
     public User updateUser(User newUser) {
         log.info("Попытка обновления пользователя с ID: {}", newUser.getId());
         if (newUser.getId() == null) {
