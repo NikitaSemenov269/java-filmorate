@@ -65,16 +65,16 @@ public class JdbcFriendRepository implements FriendRepository {
         boolean hasReverseRequest = checkFriendshipStatus(userId, friendId, false);
 
         if (hasReverseRequest) {
-        Map<String, Object> confirmParams1 = new HashMap<>();
-        confirmParams1.put("userId", userId);
-        confirmParams1.put("friendId", friendId);
+            Map<String, Object> confirmParams1 = new HashMap<>();
+            confirmParams1.put("userId", userId);
+            confirmParams1.put("friendId", friendId);
 
-        Map<String, Object> confirmParams2 = new HashMap<>();
-        confirmParams2.put("userId", friendId);
-        confirmParams2.put("friendId", userId);
+            Map<String, Object> confirmParams2 = new HashMap<>();
+            confirmParams2.put("userId", friendId);
+            confirmParams2.put("friendId", userId);
 
-        jdbc.update(CONFIRM_FRIENDSHIP_QUERY, confirmParams1);
-        jdbc.update(CONFIRM_FRIENDSHIP_QUERY, confirmParams2);
+            jdbc.update(CONFIRM_FRIENDSHIP_QUERY, confirmParams1);
+            jdbc.update(CONFIRM_FRIENDSHIP_QUERY, confirmParams2);
         } else {
             Map<String, Object> addParams = new HashMap<>();
             addParams.put("userId", userId);

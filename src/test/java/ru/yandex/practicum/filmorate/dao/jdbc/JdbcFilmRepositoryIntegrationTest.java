@@ -180,7 +180,5 @@ public class JdbcFilmRepositoryIntegrationTest {
         Collection<Film> popularFilms = filmRepository.getPopularFilms(2);
 
         assertThat(popularFilms).hasSize(2);
-        // Проверяем, что фильмы возвращаются (в данном случае без лайков,
-        // порядок может быть произвольным)
     }
 }

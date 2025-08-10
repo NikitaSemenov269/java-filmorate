@@ -42,6 +42,7 @@ public class JdbcUserRepositoryIntegrationTest {
         assertThat(createdUser.getName()).isEqualTo("Test User");
         assertThat(createdUser.getBirthday()).isEqualTo(LocalDate.of(1990, 1, 1));
     }
+
     @Test
     public void testFindAllUsers() {
         List<User> users = userRepository.findAllUsers();
@@ -50,6 +51,7 @@ public class JdbcUserRepositoryIntegrationTest {
         assertThat(users).extracting(User::getEmail)
                 .containsExactlyInAnyOrder("user1@example.com", "user2@example.com", "user3@example.com");
     }
+
     @Test
     public void testUpdateUser() {
         User user = User.builder()
@@ -76,6 +78,7 @@ public class JdbcUserRepositoryIntegrationTest {
         assertThat(result.getName()).isEqualTo("Updated Name");
         assertThat(result.getBirthday()).isEqualTo(LocalDate.of(1995, 5, 5));
     }
+
     @Test
     public void testDeleteUser() {
         User user = User.builder()
@@ -93,6 +96,7 @@ public class JdbcUserRepositoryIntegrationTest {
         Optional<User> foundUser = userRepository.getUserById(createdUser.getId());
         assertThat(foundUser).isEmpty();
     }
+
     @Test
     public void testDeleteNonExistentUser() {
         boolean deleted = userRepository.deleteUser(999L);
