@@ -132,13 +132,14 @@ public class JdbcFilmRepository extends BaseRepository<Film> implements FilmRepo
     }
 
     public void updateGenres(Set<Genre> genres, Long filmId) {
-        if (!genres.isEmpty()) {
-            Map<String, Object> baseParams = new HashMap<>();
-            baseParams.put("filmId", filmId);
+        Set<Genre> genresToUpdate = genres != null ? genres : new HashSet<>();
 
-            jdbc.update(DELETE_GENRE_FILM_QUERY, baseParams);
+        Map<String, Object> baseParams = new HashMap<>();
+        baseParams.put("filmId", filmId);
+        jdbc.update(DELETE_GENRE_FILM_QUERY, baseParams);
 
-            List<Genre> genreList = new ArrayList<>(genres);
+        if (!genresToUpdate.isEmpty()) {
+            List<Genre> genreList = new ArrayList<>(genresToUpdate);
 
             jdbc.getJdbcOperations().batchUpdate(
                     INSERT_GENRE_FILM_QUERY,

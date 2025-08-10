@@ -7,7 +7,6 @@ import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.dao.interfaces.FilmRepository;
-import ru.yandex.practicum.filmorate.dao.interfaces.LikeRepository;
 
 import java.util.Collection;
 
@@ -17,7 +16,6 @@ import java.util.Collection;
 public class FilmService {
     private final ValidationService validationService;
     private final FilmRepository filmRepository;
-    private final LikeRepository likeRepository;
 
     public Collection<Film> findAllFilms() {
         log.info("Попытка получения всех фильмов");

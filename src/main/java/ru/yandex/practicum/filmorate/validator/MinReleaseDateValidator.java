@@ -7,11 +7,14 @@ import ru.yandex.practicum.filmorate.annotation.MinReleaseDate;
 import java.time.LocalDate;
 
 public class MinReleaseDateValidator implements ConstraintValidator<MinReleaseDate, LocalDate> {
-
-    public static final LocalDate CINEMA_BIRTHDAY = LocalDate.of(1895, 12, 28);
+    private static final LocalDate MIN_RELEASE_DATE = LocalDate.of(1895, 12, 28);
 
     @Override
-    public boolean isValid(LocalDate date, ConstraintValidatorContext context) {
-        return date == null || !date.isBefore(CINEMA_BIRTHDAY);
+    public boolean isValid(LocalDate value, ConstraintValidatorContext context) {
+        if (value == null) {
+            return true;
+        }
+        return !value.isBefore(MIN_RELEASE_DATE);
     }
 }
+

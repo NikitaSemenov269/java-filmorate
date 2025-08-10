@@ -4,6 +4,7 @@ import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import ru.yandex.practicum.filmorate.annotation.MinReleaseDate;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -19,6 +20,8 @@ public class Film {
     private String name;
     @Size(max = 200, message = "Описание не должно превышать 200 символов.")
     private String description;
+    @NotNull(message = "Дата релиза обязательна")
+    @MinReleaseDate
     @PastOrPresent(message = "Фильм не может быть выпущен в будущем.")
     private LocalDate releaseDate;
     @Min(value = 1, message = "Длительность должна быть не менее 1 минуты.")
