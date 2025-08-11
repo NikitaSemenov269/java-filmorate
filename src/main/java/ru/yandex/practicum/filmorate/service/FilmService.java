@@ -45,6 +45,13 @@ public class FilmService {
         return updatedFilm;
     }
 
+    public void deleteFilm(Long id) {
+        log.info("Попытка удаления фильма с ID: {}", id);
+        validationService.validateFilmExists(id);
+        filmRepository.deleteFilm(id);
+        log.info("Фильм с ID {} удален", id);
+    }
+
     public Collection<Film> getTopRatedMovies(int count) {
         log.info("Попытка получения популярных фильмов в количестве {} штук", count);
         if (count <= 0) {

@@ -12,7 +12,7 @@ import ru.yandex.practicum.filmorate.service.LikeService;
 import java.util.Arrays;
 import java.util.Collection;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class FilmControllerTest {
@@ -53,7 +53,7 @@ public class FilmControllerTest {
 
         when(filmService.getTopRatedMovies(count)).thenReturn(popularFilms);
 
-        Collection<Film> result = filmController.getPopulateFilms(count);
+        Collection<Film> result = filmController.getPopularFilms(count);
 
         assertEquals(2, result.size());
         verify(filmService, times(1)).getTopRatedMovies(count);
@@ -85,8 +85,8 @@ public class FilmControllerTest {
 
     @Test
     public void testAddLike() {
-        Long filmId = (Long) 1L;
-        Long userId = (Long) 2L;
+        Long filmId = 1L;
+        Long userId = 2L;
 
         filmController.addLike(filmId, userId);
 
@@ -95,8 +95,8 @@ public class FilmControllerTest {
 
     @Test
     public void testRemoveLike() {
-        Long filmId = (Long) 1L;
-        Long userId = (Long) 2L;
+        Long filmId = 1L;
+        Long userId = 2L;
 
         filmController.removeLike(filmId, userId);
 

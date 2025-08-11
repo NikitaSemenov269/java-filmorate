@@ -3,5 +3,3 @@
 https://github.com/NikitaSemenov269/java-filmorate/blob/main/Untitled.pdf
 Наименование изображения с диаграммой схемы БД:
 Untitled.pdf
-
-
