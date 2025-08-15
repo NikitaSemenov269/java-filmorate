@@ -1,18 +1,20 @@
 package ru.yandex.practicum.filmorate.model;
 
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-@Slf4j
 @Data
+@Builder(toBuilder = true)
+@AllArgsConstructor
 public class User {
     @Min(value = 1, message = "Id должно быть положительным числом.")
-    private Integer id;
+    private Long id;
     @NotBlank(message = "Email не может быть пустой строкой.")
     @Email(message = "Некорректный формат email.")
     private String email;

@@ -3,114 +3,60 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exception.DuplicatedDataException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.dao.interfaces.FilmRepository;
 
-import java.time.LocalDate;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collection;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class FilmService {
+    private final ValidationService validationService;
+    private final FilmRepository filmRepository;
 
-    private final FilmStorage filmStorage;
-    private final UserStorage userStorage;
-    private static final LocalDate MIN_RELEASE_DATE = LocalDate.of(1895, 12, 28);
-
-    public Film createFilm(Film newFilm) {
-        checkReleaseDateFilm(newFilm);
-        checkDuplicateNameFilm(newFilm);
-        newFilm.setId(getNextId());
-        filmStorage.addFilm(newFilm);
-        log.info("Добавлен новой фильм: {}", newFilm.getId());
-        return newFilm;
+    public Collection<Film> findAllFilms() {
+        log.info("Попытка получения всех фильмов");
+        return filmRepository.findAllFilms();
     }
 
-    public Film updateFilm(Film updatingFilm) {
-        if (filmStorage.getFilmForId(updatingFilm.getId()) == null) {
-            throw new NotFoundException("Фильма с таким id не существует.");
+    public Film getFilmById(Long filmId) {
+        log.info("Попытка получения фильма по ID: {}", filmId);
+        validationService.validateFilmExists(filmId);
+        return filmRepository.getFilmById(filmId)
+                .orElseThrow(() -> new NotFoundException("Фильм с ID " + filmId + " не найден"));
+    }
+
+    public Film createFilm(Film film) {
+        log.info("Попытка создания фильма: {}", film.getName());
+        validationService.validateFilm(film);
+        Film createdFilm = filmRepository.createFilm(film);
+        log.info("Создан фильм с ID: {}", createdFilm.getId());
+        return createdFilm;
+    }
+
+    public Film updateFilm(Film newFilm) {
+        log.info("Попытка обновления фильма с ID: {}", newFilm.getId());
+        validationService.validateFilm(newFilm);
+        Film updatedFilm = filmRepository.updateFilm(newFilm);
+        log.info("Фильм с ID {} обновлен", newFilm.getId());
+        return updatedFilm;
+    }
+
+    public void deleteFilm(Long id) {
+        log.info("Попытка удаления фильма с ID: {}", id);
+        validationService.validateFilmExists(id);
+        filmRepository.deleteFilm(id);
+        log.info("Фильм с ID {} удален", id);
+    }
+
+    public Collection<Film> getTopRatedMovies(int count) {
+        log.info("Попытка получения популярных фильмов в количестве {} штук", count);
+        if (count <= 0) {
+            throw new ValidationException("Количество фильмов должно быть положительным числом.");
         }
-        return filmStorage.updateFilm(updatingFilm);
-    }
-
-    public Collection<Film> findAll() {
-        return filmStorage.findAll();
-    }
-
-    public Film getFilmForId(Integer id) {
-        if (filmStorage.getFilmForId(id) == null) {
-            throw new NotFoundException("Фильма с таким id не существует.");
-        }
-        return getFilmForId(id);
-    }
-
-    public void deleteFilm(Integer id) {
-        if (filmStorage.getFilmForId(id) == null) {
-            throw new NotFoundException("Фильма с таким id не существует.");
-        }
-        filmStorage.deleteFilm(id);
-    }
-
-    public Film addLike(Integer idFilm, Integer idUser) {
-        if (filmStorage.getFilmForId(idFilm) == null) {
-            throw new NotFoundException("Фильма с таким id не существует.");
-        }
-        if (userStorage.getUserForId(idUser) == null) {
-            throw new NotFoundException("Пользователя с таким id не существует.");
-        }
-        Film film = filmStorage.getFilmForId(idFilm);
-        film.getIdUsersWhoLiked().add(idUser);
-        return film;
-    }
-
-    public Film deleteLike(Integer idFilm, Integer idUser) {
-        if (filmStorage.getFilmForId(idFilm) == null) {
-            throw new NotFoundException("Фильма с таким id не существует.");
-        }
-        if (userStorage.getUserForId(idUser) == null) {
-            throw new NotFoundException("Пользователя с таким id не существует.");
-        }
-        Film film = filmStorage.getFilmForId(idFilm);
-        film.getIdUsersWhoLiked().remove(idUser);
-        return film;
-    }
-
-    public Collection<Film> getTopRatedMovies(Integer count) {
-        return filmStorage.findAll().stream()
-                .sorted((f1, f2) -> {
-                    int likes1 = f1.getIdUsersWhoLiked().size();
-                    int likes2 = f2.getIdUsersWhoLiked().size();
-                    return Integer.compare(likes2, likes1);
-                })
-                .limit(count)
-                .collect(Collectors.toList());
-    }
-
-    private void checkDuplicateNameFilm(Film newFilm) {
-        if (filmStorage.findAll().stream().anyMatch(film -> newFilm.getName().equalsIgnoreCase(film.getName()))) {
-            throw new DuplicatedDataException("Фильм с таким названием уже существует");
-        }
-    }
-
-    private void checkReleaseDateFilm(Film newFilm) {
-        if (newFilm.getReleaseDate().isBefore(MIN_RELEASE_DATE)) {
-            log.error("Некорректная дата релиза {}", newFilm.getReleaseDate());
-            throw new ClassCastException("Дата релиза фильма должна быть не ранее 28.12.1895.");
-        }
-    }
-
-    private Integer getNextId() {
-        return filmStorage.findAll()
-                .stream()
-                .mapToInt(Film::getId)
-                .max()
-                .orElse(0) + 1;
+        return filmRepository.getPopularFilms(count);
     }
 }
-
-
