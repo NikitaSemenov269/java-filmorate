@@ -43,3 +43,8 @@ MERGE INTO likes (film_id, user_id)
 VALUES
     (1, 1), (1, 2),
     (2, 1), (2, 3);
+
+MERGE INTO event_feed (event_id, user_id, description)
+VALUES
+     (1, 1, "User id: 1 добавил фильм id: 5."),
+     (2, 3, "User id: 3 удалил фильм id: 2.");
