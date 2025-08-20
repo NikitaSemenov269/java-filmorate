@@ -15,6 +15,24 @@ VALUES
     (5, 'Документальный'),
     (6, 'Боевик');
 
+MERGE INTO event_type (type_id, event_type)
+VALUES
+     (1, 'Like'),
+     (2, 'Review'),
+     (3, 'Friend');
+
+MERGE INTO event_operation (operation_id, operation_type)
+VALUES
+    (1, 'Remove'),
+    (2, 'Add'),
+    (3, 'Update');
+
+--MERGE INTO event_feed (event_id, user_id, description)
+--VALUES
+--     (1, 1, "User id: 1 добавил фильм id: 5."),
+--     (2, 3, "User id: 3 удалил фильм id: 2.");
+
+
 MERGE INTO users (user_id, email, login, name, birthday)
 VALUES
     (1, 'user1@mail.ru', 'user1', 'User One', '1990-01-01'),
@@ -43,8 +61,3 @@ MERGE INTO likes (film_id, user_id)
 VALUES
     (1, 1), (1, 2),
     (2, 1), (2, 3);
-
-MERGE INTO event_feed (event_id, user_id, description)
-VALUES
-     (1, 1, "User id: 1 добавил фильм id: 5."),
-     (2, 3, "User id: 3 удалил фильм id: 2.");

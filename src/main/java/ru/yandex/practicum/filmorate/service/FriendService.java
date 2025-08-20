@@ -15,8 +15,9 @@ import java.util.Collection;
 public class FriendService {
     private final FriendRepository friendRepository;
     private final ValidationService validationService;
+    private final EventService eventService;
 
-    public User addFriend(Long userId, Long friendId) {
+    public void addFriend(Long userId, Long friendId) {
         log.info("Попытка добавления друзья: пользователь {} добавляет {}", userId, friendId);
         validationService.validateUsersExist(userId, friendId);
         if (userId.equals(friendId)) {
@@ -24,7 +25,7 @@ public class FriendService {
         }
         friendRepository.addFriend(userId, friendId);
         log.info("Пользователь {} отправил запрос на дружбу пользователю {}", userId, friendId);
-        return null;
+        eventService.addEvent(userId, friendId, 3L /* друг */, 2L /* добавление */);
     }
 
     public void removeFriend(Long userId, Long friendId) {
@@ -32,6 +33,7 @@ public class FriendService {
         validationService.validateUsersExist(userId, friendId);
         friendRepository.removeFriend(userId, friendId);
         log.info("Пользователь {} удалил пользователя {} из друзей", userId, friendId);
+        eventService.addEvent(userId, friendId, 3L /* друг */, 1L /* удаление */);
     }
 
     public Collection<User> getFriends(Long userId) {
