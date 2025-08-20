@@ -6,11 +6,7 @@ import java.util.Collection;
 
 public interface EventRepository {
 
-    void addEvent(Long userId, Event event);
+    void addEvent(Long userId, Long entityId, Long typeId, Long operationId);
 
-    Collection<Event> getLastEvents(int count);
-
-    Collection<Event> getAllEvent();
-
-    Collection<Event> getEventByUserId(Long userId);
+    Collection<Event> getEventListByUserId(Long userId);
 }
