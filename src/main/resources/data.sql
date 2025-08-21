@@ -27,10 +27,10 @@ VALUES
     (2, 'Add'),
     (3, 'Update');
 
---MERGE INTO event_feed (event_id, user_id, description)
---VALUES
---     (1, 1, "User id: 1 добавил фильм id: 5."),
---     (2, 3, "User id: 3 удалил фильм id: 2.");
+MERGE INTO event_feed (user_id, type_id, operation_id, entity_id, created_at)
+VALUES
+     (1, 1, 3, 5, '2025-08-21T09:56:43.793'),
+     (2, 3, 2, 6, '2025-08-15T09:55:43.792');
 
 
 MERGE INTO users (user_id, email, login, name, birthday)

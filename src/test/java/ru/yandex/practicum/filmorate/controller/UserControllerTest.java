@@ -6,6 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.EventService;
 import ru.yandex.practicum.filmorate.service.FriendService;
 import ru.yandex.practicum.filmorate.service.UserService;
 
@@ -21,6 +22,8 @@ public class UserControllerTest {
     private UserService userService;
     @Mock
     private FriendService friendService;
+    @Mock
+    private EventService eventService;
 
     @InjectMocks
     private UserController userController;
@@ -116,6 +119,16 @@ public class UserControllerTest {
         userController.removeFriend(userId, friendId);
 
         verify(friendService, times(1)).removeFriend(userId, friendId);
+    }
+
+    //event
+    @Test
+    public void testEventAddFriend() {
+        Long userId = (Long) 1L;
+        Long friendId = (Long) 2L;
+
+        userController.addFriend(userId, friendId);
+        verify(eventService, times(1)).addEvent(userId, friendId, 1L, 3L);
     }
 }
 

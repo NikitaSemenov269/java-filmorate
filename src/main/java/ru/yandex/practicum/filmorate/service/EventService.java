@@ -13,16 +13,18 @@ import java.util.Collection;
 @RequiredArgsConstructor
 public class EventService {
 
-    private EventRepository eventRepository;
+    private final EventRepository eventRepository;
+    private final ValidationService validationService;
 
-    protected void addEvent(Long userId, Long entityId, Long typeId, Long operationId) {
+    public void addEvent(Long userId, Long entityId, Long typeId, Long operationId) {
         log.info("Попытка добавления записи в ленту событий пользователя: {}", userId);
-        eventRepository.addEvent(userId,entityId, typeId, operationId);
-        log.info("Запись успешно добавлена.");
+        validationService.validateUserExists(userId);
+        eventRepository.addEvent(userId, entityId, typeId, operationId);
     }
 
     public Collection<Event> getEventList(Long userId) {
-        log.info("Попытка получения ленты событий пользователя: {}", userId);
+        log.info("Попытка получения ленты событий друзей пользователя: {}", userId);
+        validationService.validateUserExists(userId);
         return eventRepository.getEventListByUserId(userId);
     }
 }
