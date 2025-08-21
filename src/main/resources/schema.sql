@@ -23,7 +23,8 @@ CREATE TABLE IF NOT EXISTS films (
     description VARCHAR(255),
     release_date DATE,
     duration INTEGER,
-    mpa_id BIGINT REFERENCES mpa_ratings (mpa_id)
+    mpa_id BIGINT REFERENCES mpa_ratings (mpa_id),
+    director_id BIGINT REFERENCES directors(director_id)
 );
 
 CREATE TABLE IF NOT EXISTS film_genre (
@@ -43,4 +44,9 @@ CREATE TABLE IF NOT EXISTS likes (
     film_id BIGINT REFERENCES films (film_id) ON DELETE CASCADE,
     user_id BIGINT REFERENCES users (user_id) ON DELETE CASCADE,
     PRIMARY KEY (film_id, user_id)
+);
+
+CREATE TABLE IF NOT EXISTS directors (
+    director_id BIGINT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL
 );
