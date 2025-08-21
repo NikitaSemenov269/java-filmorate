@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Director;
+import ru.yandex.practicum.filmorate.service.DirectorService;
 
 import java.util.Collection;
 
@@ -24,7 +25,7 @@ public class DirectorController {
     @GetMapping("/{id}")
     public Director findDirectorById(@PathVariable Long id) {
         log.info("Запрос на получение режиссера с ID: {}", id);
-        return directorService.findDirectorById(id);
+        return directorService.getDirectorById(id);
     }
 
     @PostMapping
@@ -44,4 +45,13 @@ public class DirectorController {
         log.info("Запрос на удаление режиссера с ID: {}", id);
         directorService.deleteDirector(id);
     }
+
+//    @GetMapping("/director/{directorId}") // Обратите внимание на путь /films/director/...
+//    public Collection<Film> getFilmsByDirector(
+//            @PathVariable Long directorId,
+//            @RequestParam(required = false) String sortBy) { // sortBy - необязательный параметр
+//
+//        log.info("Запрос на получение фильмов режиссера ID: {}, сортировка по: {}", directorId, sortBy);
+//        return filmService.getFilmsByDirector(directorId, sortBy);
+//    }
 }

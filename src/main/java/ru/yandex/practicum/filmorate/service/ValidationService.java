@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.dao.interfaces.FilmRepository;
 import ru.yandex.practicum.filmorate.dao.interfaces.UserRepository;
@@ -17,6 +18,7 @@ public class ValidationService {
     private final FilmRepository filmRepository;
     private final GenreRepository genreRepository;
     private final MpaRepository mpaRepository;
+    private final DirectorRepository directorRepository;
 
     public void validateUserExists(Long userId) {
         if (userId == null) {
@@ -84,4 +86,13 @@ public class ValidationService {
         mpaRepository.findMpaById(mpaId)
                 .orElseThrow(() -> new NotFoundException("Рейтинг MPA с ID " + mpaId + " не найден"));
     }
+
+    public void validateDirectorExists(Long directorId) {
+        if (directorId == null) {
+            throw new ValidationException("ID режиссёра не может быть null");
+        }
+        directorRepository.getDirectorById(directorId)
+                .orElseThrow(() -> new NotFoundException("Фильм с ID " + directorId + " не найден"));
+    }
+
 }
