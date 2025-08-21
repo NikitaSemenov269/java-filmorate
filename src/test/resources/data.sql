@@ -34,3 +34,15 @@ MERGE INTO film_genre (film_id, genre_id) VALUES
 (1, 1),
 (1, 2),
 (2, 3);
+
+MERGE INTO event_type (type_id, event_type)
+VALUES
+     (1, 'Like'),
+     (2, 'Review'),
+     (3, 'Friend');
+
+MERGE INTO event_operation (operation_id, operation_type)
+VALUES
+    (1, 'Remove'),
+    (2, 'Add'),
+    (3, 'Update');

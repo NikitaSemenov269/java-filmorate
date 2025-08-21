@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.dao.interfaces.EventRepository;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.dao.interfaces.FriendRepository;
@@ -15,25 +16,25 @@ import java.util.Collection;
 public class FriendService {
     private final FriendRepository friendRepository;
     private final ValidationService validationService;
-    private final EventService eventService;
+    private final EventRepository eventRepository;
 
     public void addFriend(Long userId, Long friendId) {
-        log.info("Попытка добавления друзья: пользователь {} добавляет {}", userId, friendId);
+        log.info("Попытка добавления в друзья: пользователь {} добавляет {}", userId, friendId);
         validationService.validateUsersExist(userId, friendId);
         if (userId.equals(friendId)) {
             throw new ValidationException("Пользователь не может добавить себя в друзья.");
         }
         friendRepository.addFriend(userId, friendId);
         log.info("Пользователь {} отправил запрос на дружбу пользователю {}", userId, friendId);
-        eventService.addEvent(userId, friendId, 3L /* друг */, 2L /* добавление */);
+        eventRepository.addEvent(userId, friendId, 3L /* друг */, 2L /* добавление */);
     }
 
     public void removeFriend(Long userId, Long friendId) {
-        log.info("Пользователь {} удалил пользователя {} из друзей", userId, friendId);
+        log.info("Попытка удаления пользователя {} из друзей пользователя {}", userId, friendId);
         validationService.validateUsersExist(userId, friendId);
         friendRepository.removeFriend(userId, friendId);
         log.info("Пользователь {} удалил пользователя {} из друзей", userId, friendId);
-        eventService.addEvent(userId, friendId, 3L /* друг */, 1L /* удаление */);
+        eventRepository.addEvent(userId, friendId, 3L /* друг */, 1L /* удаление */);
     }
 
     public Collection<User> getFriends(Long userId) {

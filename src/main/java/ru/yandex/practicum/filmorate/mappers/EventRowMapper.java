@@ -9,15 +9,16 @@ import java.sql.SQLException;
 
 @Component
 public class EventRowMapper implements RowMapper<Event> {
+
     @Override
     public Event mapRow(ResultSet resultSet, int rowNum) throws SQLException {
         return Event.builder()
                 .id(resultSet.getLong("event_id"))
-                .friendId(resultSet.getLong("friend_id"))
+                .userId(resultSet.getLong("user_id"))
                 .eventType(resultSet.getString("type"))
                 .operation(resultSet.getString("operation_type"))
                 .entityId(resultSet.getLong("entity_id"))
-                .createDate(resultSet.getTimestamp("date").toLocalDateTime())
+                .creationTime(resultSet.getTimestamp("date").toLocalDateTime())
                 .build();
     }
 }
