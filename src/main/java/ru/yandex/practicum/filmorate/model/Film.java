@@ -8,6 +8,7 @@ import ru.yandex.practicum.filmorate.annotation.MinReleaseDate;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -28,7 +29,7 @@ public class Film {
     private Integer duration;
     @NotNull(message = "Рейтинг MPA не может быть пустой")
     private MpaRating mpa;
-    private Director director;
+    private List<Director> directors;
     private Set<Long> idUsersWhoLiked = new HashSet<>();
     private Set<Genre> genres = new HashSet<>();
 }

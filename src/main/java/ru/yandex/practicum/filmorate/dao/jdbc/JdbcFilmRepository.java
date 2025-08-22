@@ -24,7 +24,7 @@ public class JdbcFilmRepository extends BaseRepository<Film> implements FilmRepo
             SELECT f.*, m.mpa_id AS mpa_id, m.name AS mpa_name, m.description AS mpa_description, d.director_id as director_id, d.name as director_name
             FROM films f
             JOIN mpa_ratings m ON f.mpa_id = m.mpa_id
-            JOIN directors d ON f.director_id = d.director_id
+            LEFT JOIN directors d ON f.director_id = d.director_id
             ORDER BY f.film_id
             """;
 
@@ -32,7 +32,7 @@ public class JdbcFilmRepository extends BaseRepository<Film> implements FilmRepo
             SELECT f.*, m.mpa_id AS mpa_id, m.name AS mpa_name, m.description AS mpa_description, d.director_id as director_id, d.name as director_name
             FROM films f
             JOIN mpa_ratings m ON f.mpa_id = m.mpa_id
-            JOIN directors d ON f.director_id = d.director_id
+            LEFT JOIN directors d ON f.director_id = d.director_id
             WHERE f.film_id = :filmId
             """;
 
@@ -54,7 +54,7 @@ public class JdbcFilmRepository extends BaseRepository<Film> implements FilmRepo
             COUNT(l.user_id) AS like_count
             FROM films f
             JOIN mpa_ratings m ON f.mpa_id = m.mpa_id
-            JOIN directors d ON f.director_id = d.director_id
+            LEFT JOIN directors d ON f.director_id = d.director_id
             LEFT JOIN likes l ON f.film_id = l.film_id
             GROUP BY f.film_id, f.name, f.description, f.release_date, f.duration, f.mpa_id,
                  m.mpa_id, m.name, m.description, d.director_id, d.name
@@ -120,8 +120,11 @@ public class JdbcFilmRepository extends BaseRepository<Film> implements FilmRepo
         params.put("releaseDate", film.getReleaseDate());
         params.put("duration", film.getDuration());
         params.put("mpaId", film.getMpa().getId());
-        params.put("directorId", film.getDirector().getId());
-
+        if (film.getDirectors() != null) {
+            params.put("directorId", film.getDirectors().getId());
+        } else {
+            params.put("directorId", null);
+        }
         long id = insert(INSERT_FILM_QUERY, params);
         film.setId(id);
         updateGenres(film.getGenres(), film.getId());
@@ -136,8 +139,12 @@ public class JdbcFilmRepository extends BaseRepository<Film> implements FilmRepo
         params.put("releaseDate", newFilm.getReleaseDate());
         params.put("duration", newFilm.getDuration());
         params.put("mpaId", newFilm.getMpa().getId());
-        params.put("directorId", newFilm.getDirector().getId());
         params.put("filmId", newFilm.getId());
+        if (newFilm.getDirectors() != null) {
+            params.put("directorId", newFilm.getDirectors().getId());
+        } else {
+            params.put("directorId", null);
+        }
 
         update(UPDATE_FILM_QUERY, params);
         updateGenres(newFilm.getGenres(), newFilm.getId());
