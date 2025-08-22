@@ -28,6 +28,7 @@ public class Film {
     private Integer duration;
     @NotNull(message = "Рейтинг MPA не может быть пустой")
     private MpaRating mpa;
+    private Director director;
     private Set<Long> idUsersWhoLiked = new HashSet<>();
     private Set<Genre> genres = new HashSet<>();
 }

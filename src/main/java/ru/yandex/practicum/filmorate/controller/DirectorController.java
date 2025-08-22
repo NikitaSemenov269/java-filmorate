@@ -46,12 +46,4 @@ public class DirectorController {
         directorService.deleteDirector(id);
     }
 
-//    @GetMapping("/director/{directorId}") // Обратите внимание на путь /films/director/...
-//    public Collection<Film> getFilmsByDirector(
-//            @PathVariable Long directorId,
-//            @RequestParam(required = false) String sortBy) { // sortBy - необязательный параметр
-//
-//        log.info("Запрос на получение фильмов режиссера ID: {}, сортировка по: {}", directorId, sortBy);
-//        return filmService.getFilmsByDirector(directorId, sortBy);
-//    }
 }

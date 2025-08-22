@@ -59,4 +59,16 @@ public class FilmService {
         }
         return filmRepository.getPopularFilms(count);
     }
+
+    public Collection<Film> getSortedFilmsByDirector(Long directorId, String sortBy) {
+        log.info("Попытка получения списка фильмов режиссера с ID: {}", directorId);
+        validationService.validateDirectorExists(directorId);
+        if (sortBy.equalsIgnoreCase("year")) {
+            return filmRepository.getDirectorFilmsSortedByYear(directorId);
+        } else if (sortBy.equalsIgnoreCase("like")){
+             return filmRepository.getDirectorFilmsSortedByLikes(directorId);
+        } else {
+            throw new ValidationException("В SortBy передан неизвестный параметр");
+        }
+    }
 }
