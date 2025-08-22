@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.dao.interfaces.UserRepository;
+import ru.yandex.practicum.filmorate.mappers.UserRowMapper;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.dao.BaseRepository;
 
@@ -24,7 +25,7 @@ public class JdbcUserRepository extends BaseRepository<User> implements UserRepo
             "birthday = :birthday WHERE user_id = :userId";
     private static final String DELETE_USER_QUERY = "DELETE FROM users WHERE user_id = :userId";
 
-    public JdbcUserRepository(NamedParameterJdbcOperations jdbc, RowMapper<User> mapper) {
+    public JdbcUserRepository(NamedParameterJdbcOperations jdbc, UserRowMapper mapper) {
         super(jdbc, mapper);
     }
 

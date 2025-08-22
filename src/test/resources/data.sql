@@ -34,3 +34,8 @@ MERGE INTO film_genre (film_id, genre_id) VALUES
 (1, 1),
 (1, 2),
 (2, 3);
+
+MERGE INTO event_feed (user_id, type_id, operation_id, entity_id, created_at)
+VALUES
+     (1, 1, 3, 2, '2025-08-21T09:56:43'),
+     (2, 3, 2, 3, '2025-08-15T09:55:43');

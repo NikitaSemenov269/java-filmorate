@@ -27,10 +27,28 @@ VALUES
     (2, 'Add'),
     (3, 'Update');
 
-MERGE INTO event_feed (user_id, type_id, operation_id, entity_id, created_at)
+--MERGE INTO event_feed (user_id, type_id, operation_id, entity_id, created_at)
+--VALUES
+--     (1, 1, 3, 5, '2025-08-21T09:56:43.793'),
+--     (2, 3, 2, 6, '2025-08-15T09:55:43.792');
+
+
+MERGE INTO event_type (type_id, event_type)
 VALUES
-     (1, 1, 3, 5, '2025-08-21T09:56:43.793'),
-     (2, 3, 2, 6, '2025-08-15T09:55:43.792');
+     (1, 'Like'),
+     (2, 'Review'),
+     (3, 'Friend');
+
+MERGE INTO event_operation (operation_id, operation_type)
+VALUES
+    (1, 'Remove'),
+    (2, 'Add'),
+    (3, 'Update');
+
+--MERGE INTO event_feed (user_id, type_id, operation_id, entity_id, created_at)
+--VALUES
+--     (1, 1, 3, 5, '2025-08-21T09:56:43.793'),
+--     (2, 3, 2, 6, '2025-08-15T09:55:43.792');
 
 
 MERGE INTO users (user_id, email, login, name, birthday)

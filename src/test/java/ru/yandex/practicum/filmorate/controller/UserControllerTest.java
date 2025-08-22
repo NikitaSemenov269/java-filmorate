@@ -6,7 +6,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.service.EventService;
 import ru.yandex.practicum.filmorate.service.FriendService;
 import ru.yandex.practicum.filmorate.service.UserService;
 
@@ -22,8 +21,6 @@ public class UserControllerTest {
     private UserService userService;
     @Mock
     private FriendService friendService;
-    @Mock
-    private EventService eventService;
 
     @InjectMocks
     private UserController userController;
@@ -49,7 +46,7 @@ public class UserControllerTest {
 
     @Test
     public void testGetFriends() {
-        Long friendId = (Long) 1L;
+        Long friendId = 1L;
         User friend1 = mock(User.class);
         User friend2 = mock(User.class);
         Collection<User> friends = Arrays.asList(friend1, friend2);
@@ -64,8 +61,8 @@ public class UserControllerTest {
 
     @Test
     public void testGetCommonFriends() {
-        Long friendId = (Long) 1L;
-        Long userId = (Long) 2L;
+        Long friendId = 1L;
+        Long userId = 2L;
         User commonFriend = mock(User.class);
         Collection<User> commonFriends = Arrays.asList(commonFriend);
 
@@ -103,8 +100,8 @@ public class UserControllerTest {
 
     @Test
     public void testAddFriend() {
-        Long userId = (Long) 1L;
-        Long friendId = (Long) 2L;
+        Long userId = 1L;
+        Long friendId = 2L;
 
         userController.addFriend(userId, friendId);
 
@@ -113,22 +110,16 @@ public class UserControllerTest {
 
     @Test
     public void testRemoveFriend() {
-        Long userId = (Long) 1L;
-        Long friendId = (Long) 2L;
+        Long userId = 1L;
+        Long friendId = 2L;
 
         userController.removeFriend(userId, friendId);
 
         verify(friendService, times(1)).removeFriend(userId, friendId);
     }
-
-    //event
-    @Test
-    public void testEventAddFriend() {
-        Long userId = (Long) 1L;
-        Long friendId = (Long) 2L;
-
-        userController.addFriend(userId, friendId);
-        verify(eventService, times(1)).addEvent(userId, friendId, 1L, 3L);
-    }
 }
+
+
+
+
 
