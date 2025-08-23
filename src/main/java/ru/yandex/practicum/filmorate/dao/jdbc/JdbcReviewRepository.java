@@ -16,15 +16,15 @@ public class JdbcReviewRepository extends BaseRepository<Review> implements Revi
 
     private static final String INSERT_REVIEW_QUERY = """
             insert into reviews (content, is_positive, user_id, film_id, useful)
-            values 
+            values
                 (:content, :isPositive, :userId, :filmId, :useful)
             ;
             """;
 
     private static final String UPDATE_REVIEW_QUERY = """
             update reviews
-            set 
-                content = :content, 
+            set
+                content = :content,
                 is_positive = :isPositive,
                 user_id = :userId,
                 film_id = :filmId,

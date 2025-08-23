@@ -18,7 +18,7 @@ public class JdbcEstimationRepository extends BaseRepository<Estimation> impleme
 
     private static final String INSERT_ESTIMATION_QUERY = """
             insert into estimations (review_id, user_id, is_like)
-            values 
+            values
                 (:reviewId, :userId, :isLike)
             ;
             """;
