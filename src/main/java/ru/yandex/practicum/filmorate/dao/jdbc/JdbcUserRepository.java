@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.dao.BaseRepository;
 import ru.yandex.practicum.filmorate.dao.interfaces.UserRepository;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.dao.BaseRepository;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,10 +18,8 @@ import java.util.Optional;
 public class JdbcUserRepository extends BaseRepository<User> implements UserRepository {
     private static final String FIND_ALL_USERS_QUERY = "SELECT * FROM users ORDER BY user_id";
     private static final String FIND_USER_BY_ID_QUERY = "SELECT * FROM users WHERE user_id = :userId";
-    private static final String INSERT_USERS_QUERY = "INSERT INTO users (email, login, name, birthday)" +
-            "VALUES (:email, :login, :name, :birthday)";
-    private static final String UPDATE_USER_QUERY = "UPDATE users SET email = :email, login = :login, name = :name, " +
-            "birthday = :birthday WHERE user_id = :userId";
+    private static final String INSERT_USERS_QUERY = "INSERT INTO users (email, login, name, birthday)" + "VALUES (:email, :login, :name, :birthday)";
+    private static final String UPDATE_USER_QUERY = "UPDATE users SET email = :email, login = :login, name = :name, " + "birthday = :birthday WHERE user_id = :userId";
     private static final String DELETE_USER_QUERY = "DELETE FROM users WHERE user_id = :userId";
 
     public JdbcUserRepository(NamedParameterJdbcOperations jdbc, RowMapper<User> mapper) {

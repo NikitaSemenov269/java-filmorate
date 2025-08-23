@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.dao.jdbc;
 
-import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
@@ -9,11 +8,10 @@ import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.dao.BaseRepository;
 import ru.yandex.practicum.filmorate.dao.interfaces.DirectorRepository;
 import ru.yandex.practicum.filmorate.dao.interfaces.FilmRepository;
+import ru.yandex.practicum.filmorate.dao.interfaces.GenreRepository;
 import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
-
-import ru.yandex.practicum.filmorate.dao.interfaces.GenreRepository;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -174,21 +172,18 @@ public class JdbcFilmRepository extends BaseRepository<Film> implements FilmRepo
         if (!directorsToUpdate.isEmpty()) {
             List<Director> directorList = new ArrayList<>(directorsToUpdate);
 
-            jdbc.getJdbcOperations().batchUpdate(
-                    INSERT_DIRECTOR_FILM_QUERY,
-                    new BatchPreparedStatementSetter() {
-                        @Override
-                        public void setValues(PreparedStatement ps, int i) throws SQLException {
-                            ps.setLong(1, filmId);
-                            ps.setInt(2, Math.toIntExact(directorList.get(i).getId()));
-                        }
+            jdbc.getJdbcOperations().batchUpdate(INSERT_DIRECTOR_FILM_QUERY, new BatchPreparedStatementSetter() {
+                @Override
+                public void setValues(PreparedStatement ps, int i) throws SQLException {
+                    ps.setLong(1, filmId);
+                    ps.setInt(2, Math.toIntExact(directorList.get(i).getId()));
+                }
 
-                        @Override
-                        public int getBatchSize() {
-                            return directorList.size();
-                        }
-                    }
-            );
+                @Override
+                public int getBatchSize() {
+                    return directorList.size();
+                }
+            });
         }
 
     }
@@ -203,21 +198,18 @@ public class JdbcFilmRepository extends BaseRepository<Film> implements FilmRepo
         if (!genresToUpdate.isEmpty()) {
             List<Genre> genreList = new ArrayList<>(genresToUpdate);
 
-            jdbc.getJdbcOperations().batchUpdate(
-                    INSERT_GENRE_FILM_QUERY,
-                    new BatchPreparedStatementSetter() {
-                        @Override
-                        public void setValues(PreparedStatement ps, int i) throws SQLException {
-                            ps.setLong(1, filmId);
-                            ps.setInt(2, Math.toIntExact(genreList.get(i).getId()));
-                        }
+            jdbc.getJdbcOperations().batchUpdate(INSERT_GENRE_FILM_QUERY, new BatchPreparedStatementSetter() {
+                @Override
+                public void setValues(PreparedStatement ps, int i) throws SQLException {
+                    ps.setLong(1, filmId);
+                    ps.setInt(2, Math.toIntExact(genreList.get(i).getId()));
+                }
 
-                        @Override
-                        public int getBatchSize() {
-                            return genreList.size();
-                        }
-                    }
-            );
+                @Override
+                public int getBatchSize() {
+                    return genreList.size();
+                }
+            });
         }
     }
 

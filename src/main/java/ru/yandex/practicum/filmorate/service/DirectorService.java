@@ -24,8 +24,7 @@ public class DirectorService {
     public Director getDirectorById(Long directorId) {
         log.info("Попытка получения режиссёра по ID: {}", directorId);
         validationService.validateDirectorExists(directorId);
-        return directorRepository.getDirectorById(directorId)
-                .orElseThrow(() -> new NotFoundException("Режиссёр с ID " + directorId + " не найден"));
+        return directorRepository.getDirectorById(directorId).orElseThrow(() -> new NotFoundException("Режиссёр с ID " + directorId + " не найден"));
     }
 
     public Director createDirector(Director director) {

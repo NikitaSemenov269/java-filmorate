@@ -49,20 +49,17 @@ public class FilmController {
     }
 
     @PutMapping("/{filmId}/like/{userId}")
-    public void addLike(@PathVariable Long filmId,
-                        @PathVariable Long userId) {
+    public void addLike(@PathVariable Long filmId, @PathVariable Long userId) {
         likeService.addLike(filmId, userId);
     }
 
     @DeleteMapping("/{filmId}/like/{userId}")
-    public void removeLike(@PathVariable Long filmId,
-                           @PathVariable Long userId) {
+    public void removeLike(@PathVariable Long filmId, @PathVariable Long userId) {
         likeService.removeLike(filmId, userId);
     }
 
     @GetMapping("/director/{directorId}")
-    public Collection<Film> getFilmsByDirector(@PathVariable Long directorId,
-            @RequestParam(required = false) String sortBy) {
+    public Collection<Film> getFilmsByDirector(@PathVariable Long directorId, @RequestParam(required = false) String sortBy) {
         log.info("Запрос на получение фильмов режиссера ID: {}, сортировка по: {}", directorId, sortBy);
         return filmService.getSortedFilmsByDirector(directorId, sortBy);
     }

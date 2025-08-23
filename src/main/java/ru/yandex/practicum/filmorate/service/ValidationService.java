@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dao.interfaces.*;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
-import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
 
 @Service
@@ -21,8 +20,7 @@ public class ValidationService {
         if (userId == null) {
             throw new ValidationException("ID пользователя не может быть null");
         }
-        userRepository.getUserById(userId)
-                .orElseThrow(() -> new NotFoundException("Пользователь с ID " + userId + " не найден"));
+        userRepository.getUserById(userId).orElseThrow(() -> new NotFoundException("Пользователь с ID " + userId + " не найден"));
     }
 
     public void validateUsersExist(Long userId1, Long userId2) {
@@ -46,8 +44,7 @@ public class ValidationService {
         if (filmId == null) {
             throw new ValidationException("ID фильма не может быть null");
         }
-        filmRepository.getFilmById(filmId)
-                .orElseThrow(() -> new NotFoundException("Фильм с ID " + filmId + " не найден"));
+        filmRepository.getFilmById(filmId).orElseThrow(() -> new NotFoundException("Фильм с ID " + filmId + " не найден"));
     }
 
     public void validateFilm(Film film) {
@@ -72,24 +69,21 @@ public class ValidationService {
         if (genreId == null) {
             throw new ValidationException("ID жанра не может быть null");
         }
-        genreRepository.findGenreById(genreId)
-                .orElseThrow(() -> new NotFoundException("Жанр с ID " + genreId + " не найден"));
+        genreRepository.findGenreById(genreId).orElseThrow(() -> new NotFoundException("Жанр с ID " + genreId + " не найден"));
     }
 
     public void validateMpaExists(Long mpaId) {
         if (mpaId == null) {
             throw new ValidationException("ID рейтинга не может быть null");
         }
-        mpaRepository.findMpaById(mpaId)
-                .orElseThrow(() -> new NotFoundException("Рейтинг MPA с ID " + mpaId + " не найден"));
+        mpaRepository.findMpaById(mpaId).orElseThrow(() -> new NotFoundException("Рейтинг MPA с ID " + mpaId + " не найден"));
     }
 
     public void validateDirectorExists(Long directorId) {
         if (directorId == null) {
             throw new ValidationException("ID режиссёра не может быть null");
         }
-        directorRepository.getDirectorById(directorId)
-                .orElseThrow(() -> new NotFoundException("Режиссёр с ID " + directorId + " не найден"));
+        directorRepository.getDirectorById(directorId).orElseThrow(() -> new NotFoundException("Режиссёр с ID " + directorId + " не найден"));
     }
 
 }

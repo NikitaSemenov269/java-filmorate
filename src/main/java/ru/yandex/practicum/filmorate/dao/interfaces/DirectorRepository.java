@@ -1,8 +1,6 @@
 package ru.yandex.practicum.filmorate.dao.interfaces;
 
-import jakarta.validation.constraints.Min;
 import ru.yandex.practicum.filmorate.model.Director;
-
 
 import java.util.Collection;
 import java.util.Optional;
