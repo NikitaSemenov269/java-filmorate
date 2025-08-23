@@ -6,8 +6,10 @@ import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.dao.BaseRepository;
 import ru.yandex.practicum.filmorate.dao.interfaces.DirectorRepository;
 import ru.yandex.practicum.filmorate.model.Director;
+import ru.yandex.practicum.filmorate.model.Genre;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Repository
 public class JdbcDirectorRepository extends BaseRepository<Director> implements DirectorRepository {
@@ -23,6 +25,13 @@ public class JdbcDirectorRepository extends BaseRepository<Director> implements 
             WHERE director_id = :directorId
             """;
     private static final String DELETE_DIRECTOR_QUERY = "DELETE FROM directors WHERE director_id = :directorId";
+    private static final String FIND_FILM_DIRECTORS_BY_ID_QUERY = """
+            SELECT d.director_id, d.name
+            FROM film_directors fd
+            JOIN directors d ON fd.director_id = d.director_id
+            WHERE fd.film_id = :filmId
+            ORDER BY d.director_id
+            """;
 
 
     public JdbcDirectorRepository(NamedParameterJdbcOperations jdbc, RowMapper<Director> mapper) {
@@ -55,6 +64,7 @@ public class JdbcDirectorRepository extends BaseRepository<Director> implements 
     public Director updateDirector(Director director) {
         Map<String, Object> params = new HashMap<>();
         params.put("name", director.getName());
+        params.put("directorId", director.getId());
         update(UPDATE_DIRECTOR_QUERY, params);
         return director;
     }
@@ -65,5 +75,13 @@ public class JdbcDirectorRepository extends BaseRepository<Director> implements 
         params.put("directorId", directorId);
         return delete(DELETE_DIRECTOR_QUERY, params);
 
+    }
+
+    @Override
+    public Set<Director> findDirectorByFilmId(Long filmId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("filmId", filmId);
+        return findMany(FIND_FILM_DIRECTORS_BY_ID_QUERY, params).stream()
+                .collect(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparingLong(Director::getId))));
     }
 }

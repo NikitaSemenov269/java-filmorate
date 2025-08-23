@@ -65,7 +65,7 @@ public class FilmService {
         validationService.validateDirectorExists(directorId);
         if (sortBy.equalsIgnoreCase("year")) {
             return filmRepository.getDirectorFilmsSortedByYear(directorId);
-        } else if (sortBy.equalsIgnoreCase("like")){
+        } else if (sortBy.equalsIgnoreCase("likes")){
              return filmRepository.getDirectorFilmsSortedByLikes(directorId);
         } else {
             throw new ValidationException("В SortBy передан неизвестный параметр");

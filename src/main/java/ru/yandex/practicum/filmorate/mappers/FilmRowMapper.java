@@ -22,14 +22,6 @@ public class FilmRowMapper implements RowMapper<Film> {
                 .mpa(new MpaRating(resultSet.getLong("mpa_id"),
                         resultSet.getString("mpa_name"),
                         resultSet.getString("mpa_description")));
-                long directorId = resultSet.getLong("director_id");
-                if (!resultSet.wasNull()) {
-                     Director director = new Director(directorId, resultSet.getString("director_name"));
-                builder.directors(director);
-                } else {
-                    builder.directors(null);
-                }
-
         return builder.build();
     }
 }
