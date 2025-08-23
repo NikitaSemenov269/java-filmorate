@@ -6,6 +6,8 @@ import ru.yandex.practicum.filmorate.dao.interfaces.*;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Review;
+
 
 @Service
 @RequiredArgsConstructor
@@ -15,6 +17,8 @@ public class ValidationService {
     private final GenreRepository genreRepository;
     private final MpaRepository mpaRepository;
     private final DirectorRepository directorRepository;
+    private final ReviewRepository reviewRepository;
+    private final EstimationRepository estimationRepository;
 
     public void validateUserExists(Long userId) {
         if (userId == null) {
@@ -79,6 +83,7 @@ public class ValidationService {
         mpaRepository.findMpaById(mpaId).orElseThrow(() -> new NotFoundException("Рейтинг MPA с ID " + mpaId + " не найден"));
     }
 
+
     public void validateDirectorExists(Long directorId) {
         if (directorId == null) {
             throw new ValidationException("ID режиссёра не может быть null");
@@ -86,4 +91,33 @@ public class ValidationService {
         directorRepository.getDirectorById(directorId).orElseThrow(() -> new NotFoundException("Режиссёр с ID " + directorId + " не найден"));
     }
 
+    public void validateReviewExists(Long reviewId) {
+        if (reviewId == null) {
+            throw new ValidationException("ID отзыва не могут быть null");
+        }
+        reviewRepository.getReviewById(reviewId)
+                .orElseThrow(() -> new NotFoundException("Отзыв с review_id " + reviewId + " не найден"));
+    }
+
+    public void validateReview(Review review) {
+        if (review == null) {
+            throw new ValidationException("Отзыв не может быть null");
+        }
+        if (review.getUseful() == null) {
+            review.setUseful(0);
+        }
+        validateUserExists(review.getUserId());
+        validateFilmExists(review.getFilmId());
+    }
+
+    public void validateEstimationExists(Long reviewId, Long userId) {
+        if (reviewId == null) {
+            throw new ValidationException("ID отзыва не могут быть null");
+        }
+        if (userId == null) {
+            throw new ValidationException("ID пользователей не могут быть null");
+        }
+        estimationRepository.getEstimation(reviewId, userId)
+                .orElseThrow(() -> new NotFoundException("Оценка с review_id " + reviewId + " и с user_id" + userId + " не найдена"));
+    }
 }
