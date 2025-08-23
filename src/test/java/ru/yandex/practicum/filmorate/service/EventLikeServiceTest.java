@@ -24,7 +24,7 @@ public class EventLikeServiceTest {
     private LikeService likeService;
 
     @Test
-    void testAddLike_CreatesEvent() {
+    void testEventAddLike() {
         Long filmId = 1L;
         Long userId = 2L;
 
@@ -33,5 +33,17 @@ public class EventLikeServiceTest {
 
         verify(likeRepository, times(1)).addLike(filmId, userId);
         verify(eventService, times(1)).addEvent(userId, filmId, 1L, 2L);
+    }
+
+    @Test
+    void testEventDeleteLike() {
+        Long filmId = 1L;
+        Long userId = 2L;
+
+        doNothing().when(likeRepository).removeLike(filmId, userId);
+        likeService.removeLike(filmId, userId);
+
+        verify(likeRepository, times(1)).removeLike(filmId, userId);
+        verify(eventService, times(1)).addEvent(userId, filmId, 1L, 1L);
     }
 }
