@@ -1,11 +1,11 @@
 package ru.yandex.practicum.filmorate.dao.jdbc;
 
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.dao.BaseRepository;
 import ru.yandex.practicum.filmorate.dao.interfaces.EventRepository;
+import ru.yandex.practicum.filmorate.mappers.EventRowMapper;
 import ru.yandex.practicum.filmorate.model.Event;
 
 import java.time.LocalDateTime;
@@ -36,7 +36,7 @@ public class JdbcEventRepository extends BaseRepository<Event> implements EventR
             ORDER BY ef.created_at DESC
             """;
 
-    public JdbcEventRepository(NamedParameterJdbcOperations jdbc, RowMapper<Event> mapper) {
+    public JdbcEventRepository(NamedParameterJdbcOperations jdbc, EventRowMapper mapper) {
         super(jdbc, mapper);
     }
 
