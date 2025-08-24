@@ -88,7 +88,7 @@ public class FilmControllerTest {
         Long filmId = 1L;
         Long userId = 2L;
 
-        filmController.addLike(filmId, userId);
+        filmController.addLikeForFilm(filmId, userId);
 
         verify(likeService, times(1)).addLike(filmId, userId);
     }
@@ -98,7 +98,7 @@ public class FilmControllerTest {
         Long filmId = 1L;
         Long userId = 2L;
 
-        filmController.removeLike(filmId, userId);
+        filmController.removeLikeForFilm(filmId, userId);
 
         verify(likeService, times(1)).removeLike(filmId, userId);
     }

@@ -18,7 +18,7 @@ public class EventRowMapper implements RowMapper<Event> {
                 .eventType(resultSet.getString("type"))
                 .operation(resultSet.getString("operation_type"))
                 .entityId(resultSet.getLong("entity_id"))
-                .creationTime(resultSet.getTimestamp("date").toLocalDateTime())
+                .timestamp(resultSet.getTimestamp("created_at").toInstant().toEpochMilli())
                 .build();
     }
 }

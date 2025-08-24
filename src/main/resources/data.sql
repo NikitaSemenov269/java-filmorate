@@ -17,15 +17,16 @@ VALUES
 
 MERGE INTO event_type (type_id, event_type)
 VALUES
-     (1, 'Like'),
-     (2, 'Review'),
-     (3, 'Friend');
+     (1, 'LIKE'),
+     (2, 'REVIEW'),
+     (3, 'FRIEND'),
+     (4, 'FEEDBACK');
 
 MERGE INTO event_operation (operation_id, operation_type)
 VALUES
-    (1, 'Remove'),
-    (2, 'Add'),
-    (3, 'Update');
+    (1, 'REMOVE'),
+    (2, 'ADD'),
+    (3, 'UPDATE');
 
 MERGE INTO users (user_id, email, login, name, birthday)
 VALUES

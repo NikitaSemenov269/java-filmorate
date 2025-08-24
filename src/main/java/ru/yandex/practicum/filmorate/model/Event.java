@@ -14,9 +14,9 @@ public class Event {
     private Long id;
     @Min(value = 1, message = "Id должно быть положительным числом.")
     private Long userId;
-    private String eventType;
-    private String operation;
     @Min(value = 1, message = "Id должно быть положительным числом.")
     private Long entityId;
-    private LocalDateTime creationTime;
+    private String eventType;
+    private String operation;
+    private Long timestamp;
 }

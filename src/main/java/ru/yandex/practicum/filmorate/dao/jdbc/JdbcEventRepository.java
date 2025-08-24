@@ -17,23 +17,20 @@ import java.util.Map;
 @Qualifier("eventRepository")
 public class JdbcEventRepository extends BaseRepository<Event> implements EventRepository {
 
-    private static final String INSERT_USERS_QUERY = "INSERT INTO event_feed (user_id, type_id," +
+    private static final String INSERT_EVENT_QUERY = "INSERT INTO event_feed (user_id, type_id," +
             " operation_id, entity_id, created_at)" +
-            "VALUES (:userId, :typeId, :operationId, :entityId, :creationTime)";
+            "VALUES (:userId, :typeId, :operationId, :entityId, :timestamp)";
 
     private static final String FIND_EVENT_LIST_BY_USER_ID_QUERY = """
-            SELECT ef.*,
+            SELECT
+                ef.*,
                 et.event_type type,
                 eo.operation_type operation
             FROM event_feed ef
             JOIN event_type et ON ef.type_id = et.type_id
             JOIN event_operation eo ON ef.operation_id = eo.operation_id
-            JOIN friends f ON (
-                     (f.user_id = :userId AND f.friend_id = ef.user_id) OR
-                     (f.friend_id = :userId AND f.user_id = ef.user_id)
-            )
-            WHERE f.confirmed = true
-            ORDER BY ef.created_at DESC
+            WHERE ef.user_id = :userId
+            ORDER BY ef.created_at
             """;
 
     public JdbcEventRepository(NamedParameterJdbcOperations jdbc, EventRowMapper mapper) {
@@ -47,9 +44,9 @@ public class JdbcEventRepository extends BaseRepository<Event> implements EventR
         params.put("entityId", entityId);
         params.put("typeId", typeId);
         params.put("operationId", operationId);
-        params.put("creationTime", LocalDateTime.now());
+        params.put("timestamp", LocalDateTime.now());
 
-        safeInsert(INSERT_USERS_QUERY, params);
+        safeInsert(INSERT_EVENT_QUERY, params);
     }
 
     @Override
