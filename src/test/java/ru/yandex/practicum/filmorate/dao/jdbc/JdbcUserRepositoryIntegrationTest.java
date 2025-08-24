@@ -86,4 +86,9 @@ public class JdbcUserRepositoryIntegrationTest {
         Optional<User> foundUser = userRepository.getUserById(999L);
         assertThat(foundUser).isEmpty();
     }
+
+    @Test
+    public void testGetRecommendationsNonExistentUser() {
+        assertThat(userRepository.getUserRecommendations(999L)).isEmpty();
+    }
 }
