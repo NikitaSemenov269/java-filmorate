@@ -3,9 +3,9 @@ package ru.yandex.practicum.filmorate.dao.jdbc;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.dao.BaseRepository;
 import ru.yandex.practicum.filmorate.dao.interfaces.GenreRepository;
 import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.dao.BaseRepository;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -42,8 +42,7 @@ public class JdbcGenreRepository extends BaseRepository<Genre> implements GenreR
     public Set<Genre> findGenreByFilmId(Long filmId) {
         Map<String, Object> params = new HashMap<>();
         params.put("filmId", filmId);
-        return findMany(FIND_FILM_GENRES_BY_ID_QUERY, params).stream()
-                .collect(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparingLong(Genre::getId))));
+        return findMany(FIND_FILM_GENRES_BY_ID_QUERY, params).stream().collect(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparingLong(Genre::getId))));
     }
 
 }
