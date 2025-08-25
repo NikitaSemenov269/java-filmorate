@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-
 import ru.yandex.practicum.filmorate.model.Review;
 import ru.yandex.practicum.filmorate.service.ReviewService;
 
@@ -38,15 +37,14 @@ public class ReviewController {
     }
 
     @GetMapping
-    public Collection<Review> getPopularReviews(
-            @RequestParam Long filmId,
-            @RequestParam(defaultValue = "10") int count) {
+    public Collection<Review> getPopularReviews(@RequestParam Long filmId, @RequestParam(defaultValue = "10") int count) {
         return reviewService.getPopularReviews(filmId, count);
     }
 
     @PutMapping("/{id}/like/{userId}")
     public void addLikeForReview(@PathVariable Long id,
                         @PathVariable Long userId) {
+
         reviewService.addLikeReview(id, userId);
     }
 

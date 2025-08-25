@@ -49,6 +49,7 @@ public class FilmController {
     }
 
     @PutMapping("/{filmId}/like/{userId}")
+
     public void addLikeForFilm(@PathVariable Long filmId,
                         @PathVariable Long userId) {
         likeService.addLike(filmId, userId);
@@ -64,5 +65,11 @@ public class FilmController {
     public Collection<Film> getFilmsByDirector(@PathVariable Long directorId, @RequestParam(required = false) String sortBy) {
         log.info("Запрос на получение фильмов режиссера ID: {}, сортировка по: {}", directorId, sortBy);
         return filmService.getSortedFilmsByDirector(directorId, sortBy);
+    }
+
+    @GetMapping("/common")
+    public Collection<Film> getCommonFriendFilms(@RequestParam Long userId, @RequestParam Long friendId) {
+        log.info("Запрос на получение общих фильмов между режиссера друзьями с ID: {},и {}", userId, friendId);
+        return filmService.getTopRatedMoviesAmongFriends(userId, friendId);
     }
 }

@@ -57,8 +57,7 @@ public class ReviewService {
     public Review getReviewById(Long reviewId) {
         log.info("Попытка получения отзыва по ID: {}", reviewId);
         validationService.validateReviewExists(reviewId);
-        return reviewRepository.getReviewById(reviewId)
-                .orElseThrow(() -> new NotFoundException("Отзыв с ID " + reviewId + " не найден"));
+        return reviewRepository.getReviewById(reviewId).orElseThrow(() -> new NotFoundException("Отзыв с ID " + reviewId + " не найден"));
     }
 
     public Collection<Review> getPopularReviews(Long filmId, int count) {
