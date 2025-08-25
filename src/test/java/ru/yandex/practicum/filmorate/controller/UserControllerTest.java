@@ -117,5 +117,13 @@ public class UserControllerTest {
 
         verify(friendService, times(1)).removeFriend(userId, friendId);
     }
+
+    @Test
+    public void testGetUserRecommendations() {
+        Long userId = (Long) 1L;
+
+        userController.getUserRecommendations(userId);
+        verify(userService, times(1)).getUserRecommendations(userId);
+    }
 }
 
