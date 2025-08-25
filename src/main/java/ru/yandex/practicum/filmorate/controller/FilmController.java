@@ -33,6 +33,13 @@ public class FilmController {
         return filmService.getFilmById(id);
     }
 
+    @GetMapping("/search")
+    public Collection<Film> searchFilms(
+            @RequestParam String query,
+            @RequestParam String by) {
+        return filmService.getResultSearchForFilms(query, by);
+    }
+
     @PostMapping
     public Film createFilm(@Valid @RequestBody Film film) {
         return filmService.createFilm(film);
@@ -51,13 +58,13 @@ public class FilmController {
     @PutMapping("/{filmId}/like/{userId}")
 
     public void addLikeForFilm(@PathVariable Long filmId,
-                        @PathVariable Long userId) {
+                               @PathVariable Long userId) {
         likeService.addLike(filmId, userId);
     }
 
     @DeleteMapping("/{filmId}/like/{userId}")
     public void removeLikeForFilm(@PathVariable Long filmId,
-                           @PathVariable Long userId) {
+                                  @PathVariable Long userId) {
         likeService.removeLike(filmId, userId);
     }
 

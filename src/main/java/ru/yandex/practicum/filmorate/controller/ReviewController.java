@@ -43,14 +43,14 @@ public class ReviewController {
 
     @PutMapping("/{id}/like/{userId}")
     public void addLikeForReview(@PathVariable Long id,
-                        @PathVariable Long userId) {
+                                 @PathVariable Long userId) {
 
         reviewService.addLikeReview(id, userId);
     }
 
     @PutMapping("/{id}/dislike/{userId}")
     public void addDislikeForReview(@PathVariable Long id,
-                           @PathVariable Long userId) {
+                                    @PathVariable Long userId) {
         reviewService.addDislikeReview(id, userId);
     }
 

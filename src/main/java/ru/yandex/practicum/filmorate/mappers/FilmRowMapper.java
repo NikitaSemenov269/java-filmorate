@@ -12,7 +12,14 @@ import java.sql.SQLException;
 public class FilmRowMapper implements RowMapper<Film> {
     @Override
     public Film mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-        Film.FilmBuilder builder = Film.builder().id(resultSet.getLong("film_id")).name(resultSet.getString("name")).description(resultSet.getString("description")).releaseDate(resultSet.getDate("release_date").toLocalDate()).duration(resultSet.getInt("duration")).mpa(new MpaRating(resultSet.getLong("mpa_id"), resultSet.getString("mpa_name"), resultSet.getString("mpa_description")));
+        Film.FilmBuilder builder = Film.builder().id(resultSet.getLong("film_id")).
+                name(resultSet.getString("name")).
+                description(resultSet.getString("description"))
+                .releaseDate(resultSet.getDate("release_date").toLocalDate())
+                .duration(resultSet.getInt("duration"))
+                .mpa(new MpaRating(resultSet.getLong("mpa_id"),
+                        resultSet.getString("mpa_name"),
+                        resultSet.getString("mpa_description")));
         return builder.build();
     }
 }
