@@ -15,6 +15,19 @@ VALUES
     (5, 'Документальный'),
     (6, 'Боевик');
 
+MERGE INTO event_type (type_id, event_type)
+VALUES
+     (1, 'LIKE'),
+     (2, 'REVIEW'),
+     (3, 'FRIEND'),
+     (4, 'FEEDBACK');
+
+MERGE INTO event_operation (operation_id, operation_type)
+VALUES
+    (1, 'REMOVE'),
+    (2, 'ADD'),
+    (3, 'UPDATE');
+
 MERGE INTO users (user_id, email, login, name, birthday)
 VALUES
     (1, 'user1@mail.ru', 'user1', 'User One', '1990-01-01'),

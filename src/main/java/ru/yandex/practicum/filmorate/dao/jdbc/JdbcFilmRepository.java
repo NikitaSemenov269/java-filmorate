@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.dao.BaseRepository;
 import ru.yandex.practicum.filmorate.dao.interfaces.DirectorRepository;
 import ru.yandex.practicum.filmorate.dao.interfaces.FilmRepository;
+import ru.yandex.practicum.filmorate.mappers.FilmRowMapper;
 import ru.yandex.practicum.filmorate.dao.interfaces.GenreRepository;
 import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -101,7 +102,7 @@ public class JdbcFilmRepository extends BaseRepository<Film> implements FilmRepo
     private final GenreRepository genreRepository;
     private final DirectorRepository directorRepository;
 
-    public JdbcFilmRepository(NamedParameterJdbcOperations jdbc, RowMapper<Film> mapper, GenreRepository genreRepository, DirectorRepository directorRepository) {
+    public JdbcFilmRepository(NamedParameterJdbcOperations jdbc, FilmRowMapper mapper, GenreRepository genreRepository) {
         super(jdbc, mapper);
         this.genreRepository = genreRepository;
         this.directorRepository = directorRepository;

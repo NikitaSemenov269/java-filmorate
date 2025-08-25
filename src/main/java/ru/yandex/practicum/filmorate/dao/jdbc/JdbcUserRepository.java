@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.dao.BaseRepository;
 import ru.yandex.practicum.filmorate.dao.interfaces.UserRepository;
+import ru.yandex.practicum.filmorate.mappers.UserRowMapper;
 import ru.yandex.practicum.filmorate.mappers.FilmRowMapper;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
@@ -40,7 +41,7 @@ public class JdbcUserRepository extends BaseRepository<User> implements UserRepo
                 WHERE l4.USER_ID = :user_id)
             """;
 
-    public JdbcUserRepository(NamedParameterJdbcOperations jdbc, RowMapper<User> mapper) {
+    public JdbcUserRepository(NamedParameterJdbcOperations jdbc, UserRowMapper mapper) {
         super(jdbc, mapper);
     }
 

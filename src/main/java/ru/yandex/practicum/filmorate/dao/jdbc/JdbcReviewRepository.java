@@ -115,10 +115,10 @@ public class JdbcReviewRepository extends BaseRepository<Review> implements Revi
     }
 
     @Override
-    public boolean deleteReview(Long reviewId) {
+    public void deleteReview(Long reviewId) {
         Map<String, Object> params = new HashMap<>();
         params.put("reviewId", reviewId);
-        return delete(DELETE_REVIEW_QUERY, params);
+        delete(DELETE_REVIEW_QUERY, params);
     }
 
     @Override
