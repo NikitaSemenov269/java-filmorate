@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.dao.BaseRepository;
 import ru.yandex.practicum.filmorate.dao.interfaces.DirectorRepository;
 import ru.yandex.practicum.filmorate.dao.interfaces.FilmRepository;
+import ru.yandex.practicum.filmorate.mappers.FilmRowMapper;
 import ru.yandex.practicum.filmorate.dao.interfaces.GenreRepository;
 import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;

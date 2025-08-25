@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.dao.BaseRepository;
 import ru.yandex.practicum.filmorate.dao.interfaces.MpaRepository;
+import ru.yandex.practicum.filmorate.mappers.MpaRatingRowMapper;
 import ru.yandex.practicum.filmorate.model.MpaRating;
 
 import java.util.HashMap;
@@ -18,7 +19,7 @@ public class JdbcMpaRepository extends BaseRepository<MpaRating> implements MpaR
     private static final String FIND_ALL_QUERY = "SELECT * FROM mpa_ratings";
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM mpa_ratings WHERE mpa_id = :mpaId";
 
-    public JdbcMpaRepository(NamedParameterJdbcOperations jdbc, RowMapper<MpaRating> mapper) {
+    public JdbcMpaRepository(NamedParameterJdbcOperations jdbc, MpaRatingRowMapper mapper) {
         super(jdbc, mapper);
     }
 
