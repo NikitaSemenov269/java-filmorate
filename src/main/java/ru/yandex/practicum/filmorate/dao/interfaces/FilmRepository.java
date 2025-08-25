@@ -24,4 +24,10 @@ public interface FilmRepository {
     Collection<Film> getDirectorFilmsSortedByLikes(Long directorId);
 
     Collection<Film> getCommonFilmsWithFriend(Long userId, Long friendId);
+
+    Collection<Film> getResultSearchForFilmsByTitle(String query);
+
+    Collection<Film> getResultSearchForFilmsByDirector(String query);
+
+    Collection<Film> getResultSearchForFilmsByDirectorAndTitle(String query);
 }
