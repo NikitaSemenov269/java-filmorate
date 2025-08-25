@@ -26,12 +26,7 @@ public class JdbcUserRepositoryIntegrationTest {
 
     @Test
     public void testCreateUser() {
-        User user = User.builder()
-                .email("test@example.com")
-                .login("testlogin")
-                .name("Test User")
-                .birthday(LocalDate.of(1990, 1, 1))
-                .build();
+        User user = User.builder().email("test@example.com").login("testlogin").name("Test User").birthday(LocalDate.of(1990, 1, 1)).build();
 
         User createdUser = userRepository.createUser(user);
 
@@ -48,27 +43,15 @@ public class JdbcUserRepositoryIntegrationTest {
         List<User> users = userRepository.findAllUsers();
 
         assertThat(users).hasSize(3);
-        assertThat(users).extracting(User::getEmail)
-                .containsExactlyInAnyOrder("user1@example.com", "user2@example.com", "user3@example.com");
+        assertThat(users).extracting(User::getEmail).containsExactlyInAnyOrder("user1@example.com", "user2@example.com", "user3@example.com");
     }
 
     @Test
     public void testUpdateUser() {
-        User user = User.builder()
-                .email("original@example.com")
-                .login("original")
-                .name("Original Name")
-                .birthday(LocalDate.of(1990, 1, 1))
-                .build();
+        User user = User.builder().email("original@example.com").login("original").name("Original Name").birthday(LocalDate.of(1990, 1, 1)).build();
         User createdUser = userRepository.createUser(user);
 
-        User updatedUser = User.builder()
-                .id(createdUser.getId())
-                .email("updated@example.com")
-                .login("updated")
-                .name("Updated Name")
-                .birthday(LocalDate.of(1995, 5, 5))
-                .build();
+        User updatedUser = User.builder().id(createdUser.getId()).email("updated@example.com").login("updated").name("Updated Name").birthday(LocalDate.of(1995, 5, 5)).build();
 
         User result = userRepository.updateUser(updatedUser);
 
@@ -81,12 +64,7 @@ public class JdbcUserRepositoryIntegrationTest {
 
     @Test
     public void testDeleteUser() {
-        User user = User.builder()
-                .email("test@example.com")
-                .login("testlogin")
-                .name("Test User")
-                .birthday(LocalDate.of(1990, 1, 1))
-                .build();
+        User user = User.builder().email("test@example.com").login("testlogin").name("Test User").birthday(LocalDate.of(1990, 1, 1)).build();
         User createdUser = userRepository.createUser(user);
 
         boolean deleted = userRepository.deleteUser(createdUser.getId());
@@ -107,5 +85,10 @@ public class JdbcUserRepositoryIntegrationTest {
     public void testFindNonExistentUser() {
         Optional<User> foundUser = userRepository.getUserById(999L);
         assertThat(foundUser).isEmpty();
+    }
+
+    @Test
+    public void testGetRecommendationsNonExistentUser() {
+        assertThat(userRepository.getUserRecommendations(999L)).isEmpty();
     }
 }

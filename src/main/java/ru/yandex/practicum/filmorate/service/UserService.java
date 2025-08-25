@@ -4,10 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dao.interfaces.EventRepository;
+import ru.yandex.practicum.filmorate.dao.interfaces.UserRepository;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.dao.interfaces.UserRepository;
 
 import java.util.Collection;
 
@@ -28,8 +29,13 @@ public class UserService {
         if (userId == null) {
             throw new ValidationException("ID пользователя не может быть null.");
         }
-        return userRepository.getUserById(userId)
-                .orElseThrow(() -> new NotFoundException("Пользователь с ID " + userId + " не найден."));
+        return userRepository.getUserById(userId).orElseThrow(() -> new NotFoundException("Пользователь с ID " + userId + " не найден."));
+    }
+
+    public Collection<Film> getUserRecommendations(Long userId) {
+
+        validationService.validateUserExists(userId);
+        return userRepository.getUserRecommendations(userId);
     }
 
     public User createUser(User user) {

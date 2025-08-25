@@ -3,10 +3,10 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.dao.interfaces.FilmRepository;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.dao.interfaces.FilmRepository;
 
 import java.util.Collection;
 
@@ -25,8 +25,7 @@ public class FilmService {
     public Film getFilmById(Long filmId) {
         log.info("Попытка получения фильма по ID: {}", filmId);
         validationService.validateFilmExists(filmId);
-        return filmRepository.getFilmById(filmId)
-                .orElseThrow(() -> new NotFoundException("Фильм с ID " + filmId + " не найден"));
+        return filmRepository.getFilmById(filmId).orElseThrow(() -> new NotFoundException("Фильм с ID " + filmId + " не найден"));
     }
 
     public Film createFilm(Film film) {
@@ -58,5 +57,22 @@ public class FilmService {
             throw new ValidationException("Количество фильмов должно быть положительным числом.");
         }
         return filmRepository.getPopularFilms(count);
+    }
+
+    public Collection<Film> getSortedFilmsByDirector(Long directorId, String sortBy) {
+        log.info("Попытка получения списка фильмов режиссера с ID: {}", directorId);
+        validationService.validateDirectorExists(directorId);
+        if (sortBy.equalsIgnoreCase("year")) {
+            return filmRepository.getDirectorFilmsSortedByYear(directorId);
+        } else if (sortBy.equalsIgnoreCase("likes")) {
+            return filmRepository.getDirectorFilmsSortedByLikes(directorId);
+        } else {
+            throw new ValidationException("В SortBy передан неизвестный параметр");
+        }
+    }
+
+    public Collection<Film> getTopRatedMoviesAmongFriends(Long userId, Long friendId) {
+        log.info("проверка что пользователи с ID: {} и {} являются друзьями", userId, friendId);
+        return filmRepository.getCommonFilmsWithFriend(userId, friendId);
     }
 }
