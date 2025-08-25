@@ -8,7 +8,10 @@ import ru.yandex.practicum.filmorate.dao.BaseRepository;
 import ru.yandex.practicum.filmorate.dao.interfaces.ReviewRepository;
 import ru.yandex.practicum.filmorate.model.Review;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @Repository
 @Qualifier("reviewRepository")

@@ -70,4 +70,9 @@ public class FilmService {
             throw new ValidationException("В SortBy передан неизвестный параметр");
         }
     }
+
+    public Collection<Film> getTopRatedMoviesAmongFriends(Long userId, Long friendId) {
+        log.info("проверка что пользователи с ID: {} и {} являются друзьями", userId, friendId);
+        return filmRepository.getCommonFilmsWithFriend(userId, friendId);
+    }
 }

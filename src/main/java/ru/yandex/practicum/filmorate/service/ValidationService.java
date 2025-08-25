@@ -95,8 +95,7 @@ public class ValidationService {
         if (reviewId == null) {
             throw new ValidationException("ID отзыва не могут быть null");
         }
-        reviewRepository.getReviewById(reviewId)
-                .orElseThrow(() -> new NotFoundException("Отзыв с review_id " + reviewId + " не найден"));
+        reviewRepository.getReviewById(reviewId).orElseThrow(() -> new NotFoundException("Отзыв с review_id " + reviewId + " не найден"));
     }
 
     public void validateReview(Review review) {
@@ -117,7 +116,7 @@ public class ValidationService {
         if (userId == null) {
             throw new ValidationException("ID пользователей не могут быть null");
         }
-        estimationRepository.getEstimation(reviewId, userId)
-                .orElseThrow(() -> new NotFoundException("Оценка с review_id " + reviewId + " и с user_id" + userId + " не найдена"));
+        estimationRepository.getEstimation(reviewId, userId).orElseThrow(() -> new NotFoundException("Оценка с review_id " + reviewId + " и с user_id" + userId + " не найдена"));
     }
+
 }

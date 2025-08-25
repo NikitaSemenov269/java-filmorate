@@ -88,6 +88,15 @@ public class JdbcFilmRepository extends BaseRepository<Film> implements FilmRepo
             GROUP BY f.film_id, m.mpa_id
             ORDER BY like_count DESC
             """;
+    private static final String GET_COMMON_FILMS_WITH_FRIEND = """
+            SELECT f.*,m.mpa_id AS mpa_id, m.name AS mpa_name,m.description AS mpa_description,
+            (SELECT COUNT(*) FROM likes l WHERE l.film_id = f.film_id) AS like_count
+            FROM films f
+            JOIN mpa_ratings m ON f.mpa_id = m.mpa_id
+            WHERE EXISTS (SELECT 1 FROM likes l WHERE l.film_id = f.film_id AND l.user_id = :userId)
+            AND EXISTS (SELECT 1 FROM likes l WHERE l.film_id = f.film_id AND l.user_id = :friendId)
+            ORDER BY like_count DESC;""";
+
 
     private final GenreRepository genreRepository;
     private final DirectorRepository directorRepository;
@@ -233,6 +242,17 @@ public class JdbcFilmRepository extends BaseRepository<Film> implements FilmRepo
             film.setDirectors(directorRepository.findDirectorByFilmId(film.getId()));
         }
         return films;
+    }
+
+    @Override
+    public Collection<Film> getCommonFilmsWithFriend(Long userId, Long friendId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("userId", userId);
+        params.put("friendId", friendId);
+        return findMany(GET_COMMON_FILMS_WITH_FRIEND, params).stream().peek(film -> {
+            film.setGenres(genreRepository.findGenreByFilmId(film.getId()));
+            film.setDirectors(directorRepository.findDirectorByFilmId(film.getId()));
+        }).collect(Collectors.toList());
     }
 
 }
