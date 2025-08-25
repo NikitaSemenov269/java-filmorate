@@ -11,7 +11,7 @@ public interface ReviewRepository {
 
     Review updateReview(Review review);
 
-    boolean deleteReview(Long reviewId);
+    void deleteReview(Long reviewId);
 
     Optional<Review> getReviewById(Long reviewId);
 

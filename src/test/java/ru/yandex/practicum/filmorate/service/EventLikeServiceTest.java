@@ -19,7 +19,6 @@ public class EventLikeServiceTest {
     @Mock
     private ValidationService validationService; // требуется для работы тестов.
 
-
     @InjectMocks
     private LikeService likeService;
 

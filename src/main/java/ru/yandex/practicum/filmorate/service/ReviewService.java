@@ -50,8 +50,8 @@ public class ReviewService {
                 .orElseThrow(() -> new NotFoundException("Отзыв с ID " + reviewId + " не найден"));
         reviewRepository.deleteReview(reviewId);
         log.info("Отзыв с ID {} удален", reviewId);
-        log.info("Попытка записи: пользователь {} удалил отзыв {}", review.getUserId(), review.getReviewId());
-        eventService.addEvent(review.getUserId(), review.getReviewId(), 2L /* отзыв */, 1L /* удаление */);
+        log.info("Попытка записи: пользователь {} удалил отзыв {}", review.getUserId(), reviewId);
+        eventService.addEvent(review.getUserId(), reviewId, 2L /* отзыв */, 1L /* удаление */);
     }
 
     public Review getReviewById(Long reviewId) {
