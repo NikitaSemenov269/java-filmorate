@@ -87,7 +87,7 @@ public class FilmService {
     public Collection<Film> getResultSearchForFilms(String query, String by) {
         if (by == null && query == null) {
             log.info("Попытка получения списка всех фильмов отсортированных по популярности.");
-            return filmRepository.getPopularFilms(findAllFilms().size(), null, 2999);
+            return filmRepository.getPopularFilms(findAllFilms().size(), null, 0);
         }
         return switch (by) {
             case "title" -> {

@@ -6,6 +6,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.jdbc.Sql;
 import ru.yandex.practicum.filmorate.mappers.DirectorRowMapper;
 import ru.yandex.practicum.filmorate.mappers.FilmRowMapper;
 import ru.yandex.practicum.filmorate.mappers.GenreRowMapper;
@@ -66,6 +67,7 @@ public class JdbcFilmRepositoryIntegrationTest {
     }
 
     @Test
+    @Sql(scripts = {"/test-schema.sql", "/test-data.sql"})
     public void testFindAllFilms() {
         List<Film> films = filmRepository.findAllFilms();
 
@@ -74,6 +76,7 @@ public class JdbcFilmRepositoryIntegrationTest {
     }
 
     @Test
+    @Sql(scripts = {"/test-schema.sql", "/test-data.sql"})
     public void testUpdateFilm() {
         Film film = Film.builder().name("Original Film").description("Original Description").releaseDate(LocalDate.of(2020, 1, 1)).duration(120).mpa(MpaRating.builder().id(1L).name("G").build()).genres(new HashSet<>()).directors(new HashSet<>()).build();
         Film createdFilm = filmRepository.createFilm(film);
@@ -126,6 +129,7 @@ public class JdbcFilmRepositoryIntegrationTest {
     }
 
     @Test
+    @Sql(scripts = {"/test-schema.sql", "/test-data.sql"})
     public void testGetResultSearchForFilmsByTitle() {
         List<Film> films = filmRepository.findAllFilms();
         assertThat(films).hasSize(2);
@@ -142,6 +146,7 @@ public class JdbcFilmRepositoryIntegrationTest {
     }
 
     @Test
+    @Sql(scripts = {"/test-schema.sql", "/test-data.sql"})
     public void testGetResultSearchForFilmsByDirector() {
         List<Film> films = filmRepository.findAllFilms();
         assertThat(films).hasSize(2);
@@ -158,6 +163,7 @@ public class JdbcFilmRepositoryIntegrationTest {
     }
 
     @Test
+    @Sql(scripts = {"/test-schema.sql", "/test-data.sql"})
     public void testGetResultSearchForFilmsByDirectorAndTitle() {
         List<Film> films = filmRepository.findAllFilms();
         assertThat(films).hasSize(2);
@@ -174,6 +180,7 @@ public class JdbcFilmRepositoryIntegrationTest {
     }
 
     @Test
+    @Sql(scripts = {"/test-schema.sql", "/test-data.sql"})
     public void failTestGetResultSearchForFilmsByDirectorAndTitle() {
         List<Film> films = filmRepository.findAllFilms();
         assertThat(films).hasSize(2);
