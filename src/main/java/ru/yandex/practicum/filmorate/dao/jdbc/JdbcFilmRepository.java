@@ -112,6 +112,34 @@ public class JdbcFilmRepository extends BaseRepository<Film> implements FilmRepo
             AND EXISTS (SELECT 1 FROM likes l WHERE l.film_id = f.film_id AND l.user_id = :friendId)
             ORDER BY like_count DESC;""";
 
+    private static final String SEARCH_FILMS_BY_TITLE_QUERY = """
+            SELECT f.*, m.mpa_id AS mpa_id, m.name AS mpa_name, m.description AS mpa_description
+            FROM films f
+            JOIN mpa_ratings m ON f.mpa_id = m.mpa_id
+            WHERE LOWER(f.name) LIKE LOWER(CONCAT('%', :query, '%'))
+            ORDER BY f.film_id
+            """;
+
+    private static final String SEARCH_FILMS_BY_DIRECTOR_QUERY = """
+            SELECT f.*, m.mpa_id AS mpa_id, m.name AS mpa_name, m.description AS mpa_description
+            FROM films f
+            JOIN mpa_ratings m ON f.mpa_id = m.mpa_id
+            JOIN film_directors fd ON f.film_id = fd.film_id
+            JOIN directors d ON fd.director_id = d.director_id
+            WHERE LOWER(d.name) LIKE LOWER(CONCAT('%', :query, '%'))
+            ORDER BY f.film_id
+            """;
+
+    private static final String SEARCH_FILMS_BY_TITLE_AND_DIRECTOR_QUERY = """
+            SELECT DISTINCT f.*, m.mpa_id AS mpa_id, m.name AS mpa_name, m.description AS mpa_description
+            FROM films f
+            JOIN mpa_ratings m ON f.mpa_id = m.mpa_id
+            LEFT JOIN film_directors fd ON f.film_id = fd.film_id
+            LEFT JOIN directors d ON fd.director_id = d.director_id
+            WHERE LOWER(f.name) LIKE LOWER(CONCAT('%', :query, '%'))
+               OR LOWER(d.name) LIKE LOWER(CONCAT('%', :query, '%'))
+            ORDER BY f.film_id
+            """;
 
     private final GenreRepository genreRepository;
     private final DirectorRepository directorRepository;
@@ -154,7 +182,7 @@ public class JdbcFilmRepository extends BaseRepository<Film> implements FilmRepo
         film.setId(id);
         updateGenres(film.getGenres(), film.getId());
         updateDirectors(film.getDirectors(), film.getId());
-        return film;
+        return getFilmById(film.getId()).orElse(film);
     }
 
     @Override
@@ -225,7 +253,6 @@ public class JdbcFilmRepository extends BaseRepository<Film> implements FilmRepo
                 }
             });
         }
-
     }
 
     public void updateGenres(Set<Genre> genres, Long filmId) {
@@ -286,4 +313,33 @@ public class JdbcFilmRepository extends BaseRepository<Film> implements FilmRepo
         }).collect(Collectors.toList());
     }
 
+    @Override
+    public Collection<Film> getResultSearchForFilmsByTitle(String query) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("query", query);
+        return findMany(SEARCH_FILMS_BY_TITLE_QUERY, params).stream().peek(film -> {
+            film.setGenres(genreRepository.findGenreByFilmId(film.getId()));
+            film.setDirectors(directorRepository.findDirectorByFilmId(film.getId()));
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public Collection<Film> getResultSearchForFilmsByDirector(String query) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("query", query);
+        return findMany(SEARCH_FILMS_BY_DIRECTOR_QUERY, params).stream().peek(film -> {
+            film.setGenres(genreRepository.findGenreByFilmId(film.getId()));
+            film.setDirectors(directorRepository.findDirectorByFilmId(film.getId()));
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public Collection<Film> getResultSearchForFilmsByDirectorAndTitle(String query) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("query", query);
+        return findMany(SEARCH_FILMS_BY_TITLE_AND_DIRECTOR_QUERY, params).stream().peek(film -> {
+            film.setGenres(genreRepository.findGenreByFilmId(film.getId()));
+            film.setDirectors(directorRepository.findDirectorByFilmId(film.getId()));
+        }).collect(Collectors.toList());
+    }
 }

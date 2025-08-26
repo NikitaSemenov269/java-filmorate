@@ -24,13 +24,20 @@ public class FilmController {
     }
 
     @GetMapping("/popular")
-    public Collection<Film> getPopularFilms(@RequestParam(defaultValue = "100000") int count, @RequestParam(required = false) Long genreId, @RequestParam(required = false, defaultValue = "2999") int year) {
+    public Collection<Film> getPopularFilms(@RequestParam(defaultValue = "100_000") int count, @RequestParam(required = false) Long genreId, @RequestParam(required = false, defaultValue = "2999") int year) {
         return filmService.getTopRatedMovies(count, genreId, year);
     }
 
     @GetMapping("/{id}")
     public Film getFilmById(@PathVariable Long id) {
         return filmService.getFilmById(id);
+    }
+
+    @GetMapping("/search")
+    public Collection<Film> searchFilms(
+            @RequestParam String query,
+            @RequestParam String by) {
+        return filmService.getResultSearchForFilms(query, by);
     }
 
     @PostMapping

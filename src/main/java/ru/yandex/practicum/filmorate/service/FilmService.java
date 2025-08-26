@@ -84,4 +84,26 @@ public class FilmService {
         log.info("проверка что пользователи с ID: {} и {} являются друзьями", userId, friendId);
         return filmRepository.getCommonFilmsWithFriend(userId, friendId);
     }
+
+    public Collection<Film> getResultSearchForFilms(String query, String by) {
+        if (by == null && query == null) {
+            log.info("Попытка получения списка всех фильмов отсортированных по популярности.");
+            return filmRepository.getPopularFilms(findAllFilms().size(), null, 0);
+        }
+        return switch (by) {
+            case "title" -> {
+                log.info("Попытка получения списка фильмов отсортированных по названию.");
+                yield filmRepository.getResultSearchForFilmsByTitle(query);
+            }
+            case "director" -> {
+                log.info("Попытка получения списка фильмов отсортированных по режиссерам.");
+                yield filmRepository.getResultSearchForFilmsByDirector(query);
+            }
+            case "title,director", "director,title" -> {
+                log.info("Попытка получения списка фильмов отсортированных по режиссерам и названию.");
+                yield filmRepository.getResultSearchForFilmsByDirectorAndTitle(query);
+            }
+            default -> throw new IllegalArgumentException("Неверный параметр поиска");
+        };
+    }
 }
