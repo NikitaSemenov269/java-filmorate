@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.dao.jdbc;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.dao.BaseRepository;
@@ -102,7 +101,8 @@ public class JdbcFilmRepository extends BaseRepository<Film> implements FilmRepo
     private final GenreRepository genreRepository;
     private final DirectorRepository directorRepository;
 
-    public JdbcFilmRepository(NamedParameterJdbcOperations jdbc, FilmRowMapper mapper, GenreRepository genreRepository) {
+    public JdbcFilmRepository(NamedParameterJdbcOperations jdbc, FilmRowMapper mapper, GenreRepository genreRepository,
+                              DirectorRepository directorRepository) {
         super(jdbc, mapper);
         this.genreRepository = genreRepository;
         this.directorRepository = directorRepository;
