@@ -60,4 +60,11 @@ public class UserService {
         log.info("Пользователь с ID {} обновлен", newUser.getId());
         return updatedUser;
     }
+
+    public void deleteUser(Long id) {
+        log.info("Попытка удаления пользователя с ID: {}", id);
+        validationService.validateUserExists(id);
+        userRepository.deleteUser(id);
+        log.info("Пользователь с ID {} удален", id);
+    }
 }

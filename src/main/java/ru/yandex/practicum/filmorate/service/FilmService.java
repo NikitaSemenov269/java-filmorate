@@ -51,12 +51,20 @@ public class FilmService {
         log.info("Фильм с ID {} удален", id);
     }
 
-    public Collection<Film> getTopRatedMovies(int count) {
+    public Collection<Film> getTopRatedMovies(int count, Long genreId, int year) {
         log.info("Попытка получения популярных фильмов в количестве {} штук", count);
         if (count <= 0) {
             throw new ValidationException("Количество фильмов должно быть положительным числом.");
         }
-        return filmRepository.getPopularFilms(count);
+
+        if (year <= 0) {
+            throw new ValidationException("Год фильма должен быть положительным числом.");
+        }
+
+        if (genreId != null) {
+            validationService.validateGenreExists(genreId);
+        }
+        return filmRepository.getPopularFilms(count, genreId, year);
     }
 
     public Collection<Film> getSortedFilmsByDirector(Long directorId, String sortBy) {

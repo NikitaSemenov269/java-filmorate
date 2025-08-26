@@ -50,12 +50,14 @@ public class JdbcFilmRepository extends BaseRepository<Film> implements FilmRepo
 
     private static final String GET_POPULAR_FILM_QUERY = """
             SELECT f.*, m.mpa_id AS mpa_id, m.name AS mpa_name, m.description AS mpa_description,
-            COUNT(l.user_id) AS like_count
+            COUNT(l.user_id) AS like_count, fg.GENRE_ID
             FROM films f
             JOIN mpa_ratings m ON f.mpa_id = m.mpa_id
+            LEFT JOIN film_genre fg ON fg.FILM_ID = f.FILM_ID AND fg.GENRE_ID = :genreId
             LEFT JOIN likes l ON f.film_id = l.film_id
+            WHERE YEAR(f.RELEASE_DATE) = :year OR :year = 2999
             GROUP BY f.film_id, f.name, f.description, f.release_date, f.duration, f.mpa_id,
-                 m.mpa_id, m.name, m.description
+                 m.mpa_id, m.name, m.description, fg.GENRE_ID
             ORDER BY like_count DESC
             LIMIT :count
             """;
@@ -194,9 +196,11 @@ public class JdbcFilmRepository extends BaseRepository<Film> implements FilmRepo
     }
 
     @Override
-    public Collection<Film> getPopularFilms(int count) {
+    public Collection<Film> getPopularFilms(int count, Long genreId, int year) {
         Map<String, Object> params = new HashMap<>();
         params.put("count", count);
+        params.put("genreId", genreId);
+        params.put("year", year);
         return findMany(GET_POPULAR_FILM_QUERY, params);
     }
 

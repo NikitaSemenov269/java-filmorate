@@ -9,7 +9,7 @@ public interface FilmRepository {
 
     Collection<Film> findAllFilms();
 
-    Collection<Film> getPopularFilms(int count);
+    Collection<Film> getPopularFilms(int count, Long genreId, int year);
 
     Film createFilm(Film film);
 
