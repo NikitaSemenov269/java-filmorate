@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.dao.interfaces.EventRepository;
 import ru.yandex.practicum.filmorate.dao.interfaces.UserRepository;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
@@ -61,6 +60,7 @@ public class UserService {
         log.info("Пользователь с ID {} обновлен", newUser.getId());
         return updatedUser;
     }
+
     public void deleteUser(Long id) {
         log.info("Попытка удаления пользователя с ID: {}", id);
         validationService.validateUserExists(id);
@@ -68,4 +68,3 @@ public class UserService {
         log.info("Пользователь с ID {} удален", id);
     }
 }
-
