@@ -33,14 +33,15 @@ public class JdbcFilmRepositoryIntegrationTest {
     private JdbcFilmRepository filmRepository;
 
     @Test
+    @Sql("/test-data.sql")
     public void testCreateFilm() {
-        Film film = Film.builder().name("Test Film").description("Test Description").releaseDate(LocalDate.of(2020, 1, 1)).duration(120).mpa(MpaRating.builder().id(1L).name("G").description("General Audiences").build()).genres(new HashSet<>(Arrays.asList(Genre.builder().id(1L).name("Комедия").build(), Genre.builder().id(2L).name("Драма").build()))).directors(new HashSet<>(Arrays.asList(Director.builder().id(1L).name("Квентин Тарантино").build()))).build();
+        Film film = Film.builder().name("Test Film 1_В").description("Test Description").releaseDate(LocalDate.of(2020, 1, 1)).duration(120).mpa(MpaRating.builder().id(1L).name("G").description("General Audiences").build()).genres(new HashSet<>(Arrays.asList(Genre.builder().id(1L).name("Комедия").build(), Genre.builder().id(2L).name("Драма").build()))).directors(new HashSet<>(Arrays.asList(Director.builder().id(1L).name("Квентин Тарантино").build()))).build();
 
         Film createdFilm = filmRepository.createFilm(film);
 
         assertThat(createdFilm).isNotNull();
         assertThat(createdFilm.getId()).isNotNull().isPositive();
-        assertThat(createdFilm.getName()).isEqualTo("Test Film");
+        assertThat(createdFilm.getName()).isEqualTo("Test Film 1_В");
         assertThat(createdFilm.getDescription()).isEqualTo("Test Description");
         assertThat(createdFilm.getReleaseDate()).isEqualTo(LocalDate.of(2020, 1, 1));
         assertThat(createdFilm.getDuration()).isEqualTo(120);
@@ -51,7 +52,7 @@ public class JdbcFilmRepositoryIntegrationTest {
 
     @Test
     public void testFindFilmById() {
-        Film film = Film.builder().name("Test Film").description("Test Description").releaseDate(LocalDate.of(2020, 1, 1)).duration(120).mpa(MpaRating.builder().id(1L).name("G").description("General Audience").build()).genres(new HashSet<>()).directors(new HashSet<>()).build();
+        Film film = Film.builder().name("Test Film 2_ТА").description("Test Description").releaseDate(LocalDate.of(2020, 1, 1)).duration(120).mpa(MpaRating.builder().id(1L).name("G").description("General Audience").build()).genres(new HashSet<>()).directors(new HashSet<>()).build();
 
         Film createdFilm = filmRepository.createFilm(film);
 
@@ -59,7 +60,7 @@ public class JdbcFilmRepositoryIntegrationTest {
 
         assertThat(foundFilm).isPresent();
         assertThat(foundFilm.get().getId()).isEqualTo(createdFilm.getId());
-        assertThat(foundFilm.get().getName()).isEqualTo("Test Film");
+        assertThat(foundFilm.get().getName()).isEqualTo("Test Film 2_ТА");
         assertThat(foundFilm.get().getDescription()).isEqualTo("Test Description");
         assertThat(foundFilm.get().getReleaseDate()).isEqualTo(LocalDate.of(2020, 1, 1));
         assertThat(foundFilm.get().getDuration()).isEqualTo(120);
@@ -72,7 +73,7 @@ public class JdbcFilmRepositoryIntegrationTest {
         List<Film> films = filmRepository.findAllFilms();
 
         assertThat(films).hasSize(2);
-        assertThat(films).extracting(Film::getName).containsExactlyInAnyOrder("Test Film 1_B", "Test Film 2_ТА");
+        assertThat(films).extracting(Film::getName).containsExactlyInAnyOrder("Test Film 1_В", "Test Film 2_ТА");
     }
 
     @Test
@@ -96,6 +97,7 @@ public class JdbcFilmRepositoryIntegrationTest {
     }
 
     @Test
+    @Sql(scripts = {"/test-schema.sql", "/test-data.sql"})
     public void testDeleteFilm() {
         Film film = Film.builder().name("Test Film").description("Test Description").releaseDate(LocalDate.of(2020, 1, 1)).duration(120).mpa(MpaRating.builder().id(1L).name("G").build()).genres(new HashSet<>()).directors(new HashSet<>()).build();
         Film createdFilm = filmRepository.createFilm(film);
@@ -109,12 +111,14 @@ public class JdbcFilmRepositoryIntegrationTest {
     }
 
     @Test
+    @Sql(scripts = {"/test-schema.sql", "/test-data.sql"})
     public void testDeleteNonExistentFilm() {
         boolean deleted = filmRepository.deleteFilm(999L);
         assertThat(deleted).isFalse();
     }
 
     @Test
+    @Sql(scripts = {"/test-schema.sql", "/test-data.sql"})
     public void testGetPopularFilms() {
         Film film1 = Film.builder().name("Popular Film").description("Popular Description").releaseDate(LocalDate.of(2020, 1, 1)).duration(120).mpa(MpaRating.builder().id(1L).name("G").build()).genres(new HashSet<>()).directors(new HashSet<>()).build();
 
@@ -129,7 +133,7 @@ public class JdbcFilmRepositoryIntegrationTest {
     }
 
     @Test
-    @Sql(scripts = {"/test-schema.sql", "/test-data.sql"})
+    @Sql("/test-data.sql")
     public void testGetResultSearchForFilmsByTitle() {
         List<Film> films = filmRepository.findAllFilms();
         assertThat(films).hasSize(2);
@@ -146,7 +150,7 @@ public class JdbcFilmRepositoryIntegrationTest {
     }
 
     @Test
-    @Sql(scripts = {"/test-schema.sql", "/test-data.sql"})
+    @Sql("/test-data.sql")
     public void testGetResultSearchForFilmsByDirector() {
         List<Film> films = filmRepository.findAllFilms();
         assertThat(films).hasSize(2);
@@ -163,7 +167,7 @@ public class JdbcFilmRepositoryIntegrationTest {
     }
 
     @Test
-    @Sql(scripts = {"/test-schema.sql", "/test-data.sql"})
+    @Sql("/test-data.sql")
     public void testGetResultSearchForFilmsByDirectorAndTitle() {
         List<Film> films = filmRepository.findAllFilms();
         assertThat(films).hasSize(2);
@@ -180,7 +184,7 @@ public class JdbcFilmRepositoryIntegrationTest {
     }
 
     @Test
-    @Sql(scripts = {"/test-schema.sql", "/test-data.sql"})
+    @Sql("/test-data.sql")
     public void failTestGetResultSearchForFilmsByDirectorAndTitle() {
         List<Film> films = filmRepository.findAllFilms();
         assertThat(films).hasSize(2);
@@ -193,6 +197,7 @@ public class JdbcFilmRepositoryIntegrationTest {
         assertThat(filmTest).hasSize(0);
     }
 
+    @Test
     public void testGetPopularFilmsByGenre() {
         Film film1 = Film.builder()
                 .name("Popular Film")

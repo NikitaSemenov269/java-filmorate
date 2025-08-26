@@ -92,6 +92,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @Sql(scripts = {"/test-schema.sql", "/test-data.sql"})
     public void testUpdateUser() {
         User user = mock(User.class);
 

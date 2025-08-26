@@ -6,6 +6,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.jdbc.Sql;
 import ru.yandex.practicum.filmorate.mappers.DirectorRowMapper;
 import ru.yandex.practicum.filmorate.model.Director;
 
@@ -26,6 +27,7 @@ public class JdbcDirectorRepositoryIntegrationTest {
 
 
     @Test
+    @Sql(scripts = {"/test-schema.sql", "/test-data.sql"})
     public void testGetDirectorById() {
         Long directorId = 1L; // Квентин Тарантино
 
@@ -38,6 +40,7 @@ public class JdbcDirectorRepositoryIntegrationTest {
     }
 
     @Test
+    @Sql(scripts = {"/test-schema.sql", "/test-data.sql"})
     public void testGetDirectorById_NonExistent() {
         Long nonExistentDirectorId = 999L;
 
@@ -47,6 +50,7 @@ public class JdbcDirectorRepositoryIntegrationTest {
     }
 
     @Test
+    @Sql(scripts = {"/test-schema.sql", "/test-data.sql"})
     public void testFindAllDirectors() {
         Collection<Director> directors = directorRepository.findAllDirectors();
 
@@ -54,6 +58,7 @@ public class JdbcDirectorRepositoryIntegrationTest {
     }
 
     @Test
+    @Sql(scripts = {"/test-schema.sql", "/test-data.sql"})
     public void testFindDirectorByFilmId() {
         Long filmId = 1L;
         Set<Director> filmDirectors = directorRepository.findDirectorByFilmId(filmId);
@@ -63,6 +68,7 @@ public class JdbcDirectorRepositoryIntegrationTest {
     }
 
     @Test
+    @Sql(scripts = {"/test-schema.sql", "/test-data.sql"})
     public void testCreateDirector() {
         Director newDirector = Director.builder().name("Новый режиссер").build();
         Director createdDirector = directorRepository.createDirector(newDirector);
@@ -74,6 +80,7 @@ public class JdbcDirectorRepositoryIntegrationTest {
     }
 
     @Test
+    @Sql(scripts = {"/test-schema.sql", "/test-data.sql"})
     public void testUpdateDirector() {
         Long existingDirectorId = 1L; // Квентин Тарантино
         String updatedName = "Квентин Тарантино (обновленный)";
@@ -94,6 +101,7 @@ public class JdbcDirectorRepositoryIntegrationTest {
     }
 
     @Test
+    @Sql(scripts = {"/test-schema.sql", "/test-data.sql"})
     public void testDeleteDirector() {
         Director directorToDelete = Director.builder().name("Режиссер для удаления").build();
         Director createdDirector = directorRepository.createDirector(directorToDelete);
@@ -110,6 +118,7 @@ public class JdbcDirectorRepositoryIntegrationTest {
     }
 
     @Test
+    @Sql(scripts = {"/test-schema.sql", "/test-data.sql"})
     public void testDeleteDirectorNotExist() {
         Long nonExistentDirectorId = 999L;
 

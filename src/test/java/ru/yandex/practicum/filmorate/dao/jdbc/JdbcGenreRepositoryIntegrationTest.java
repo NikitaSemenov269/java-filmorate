@@ -6,6 +6,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.jdbc.Sql;
 import ru.yandex.practicum.filmorate.mappers.GenreRowMapper;
 import ru.yandex.practicum.filmorate.model.Genre;
 
@@ -25,6 +26,7 @@ public class JdbcGenreRepositoryIntegrationTest {
     private JdbcGenreRepository genreRepository;
 
     @Test
+    @Sql(scripts = {"/test-schema.sql", "/test-data.sql"})
     public void testFindGenreById() {
         Long genreId = 1L; // Предполагается, что жанр с id=1 уже существует в БД
 
@@ -34,6 +36,7 @@ public class JdbcGenreRepositoryIntegrationTest {
     }
 
     @Test
+    @Sql(scripts = {"/test-schema.sql", "/test-data.sql"})
     public void testFindAllGenres() {
         List<Genre> genres = genreRepository.findAllGenres();
 
@@ -41,6 +44,7 @@ public class JdbcGenreRepositoryIntegrationTest {
     }
 
     @Test
+    @Sql(scripts = {"/test-schema.sql", "/test-data.sql"})
     public void testFindGenreByFilmId() {
         Long filmId = 1L; // Предполагается, что фильм с id=1 уже существует в БД и имеет жанры
 

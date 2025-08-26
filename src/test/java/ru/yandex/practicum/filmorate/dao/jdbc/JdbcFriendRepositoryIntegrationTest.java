@@ -6,6 +6,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.jdbc.Sql;
 import ru.yandex.practicum.filmorate.mappers.UserRowMapper;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -23,6 +24,7 @@ public class JdbcFriendRepositoryIntegrationTest {
     private JdbcFriendRepository friendRepository;
 
     @Test
+    @Sql(scripts = {"/test-schema.sql", "/test-data.sql"})
     public void testAddFriend() {
         Long userId = 1L; // Предполагается, что пользователь с id=1 уже существует в БД
         Long friendId = 2L; // Предполагается, что пользователь с id=2 уже существует в БД
@@ -34,6 +36,7 @@ public class JdbcFriendRepositoryIntegrationTest {
     }
 
     @Test
+    @Sql(scripts = {"/test-schema.sql", "/test-data.sql"})
     public void testRemoveFriend() {
         Long userId = 1L; // Предполагается, что пользователь с id=1 уже существует в БД
         Long friendId = 2L; // Предполагается, что пользователь с id=2 уже существует в БД
@@ -46,6 +49,7 @@ public class JdbcFriendRepositoryIntegrationTest {
     }
 
     @Test
+    @Sql(scripts = {"/test-schema.sql", "/test-data.sql"})
     public void testGetFriends() {
         Long userId = 1L; // Предполагается, что пользователь с id=1 уже существует в БД и имеет друзей
 
@@ -55,6 +59,7 @@ public class JdbcFriendRepositoryIntegrationTest {
     }
 
     @Test
+    @Sql(scripts = {"/test-schema.sql", "/test-data.sql"})
     public void testGetCommonFriends() {
         Long userId1 = 1L; // Предполагается, что пользователь с id=1 уже существует в БД и имеет общих друзей
         Long userId2 = 2L; // Предполагается, что пользователь с id=2 уже существует в БД и имеет общих друзей

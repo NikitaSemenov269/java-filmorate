@@ -1,11 +1,37 @@
-MERGE INTO mpa_ratings (mpa_id, name, description) VALUES
-(1, 'G', 'General Audiences'),
-(2, 'PG', 'Parental Guidance Suggested'),
-(3, 'PG-13', 'Parents Strongly Cautioned'),
-(4, 'R', 'Restricted'),
-(5, 'NC-17', 'Adults Only');
+DELETE FROM friends;
+DELETE FROM likes;
+DELETE FROM film_genre;
+DELETE FROM film_directors;
 
-MERGE INTO genres (genre_id, name) VALUES
+DELETE FROM users;
+ALTER TABLE users ALTER COLUMN user_id RESTART WITH 1;
+
+DELETE FROM films;
+ALTER TABLE films ALTER COLUMN film_id RESTART WITH 1;
+
+DELETE FROM directors;
+ALTER TABLE directors ALTER COLUMN director_id RESTART WITH 1;
+
+DELETE FROM genres;
+ALTER TABLE genres ALTER COLUMN genre_id RESTART WITH 1;
+
+DELETE FROM mpa_ratings;
+ALTER TABLE mpa_ratings ALTER COLUMN mpa_id RESTART WITH 1;
+
+DELETE FROM event_type;
+ALTER TABLE event_type ALTER COLUMN type_id RESTART WITH 1;
+
+DELETE FROM event_operation;
+ALTER TABLE event_operation ALTER COLUMN operation_id RESTART WITH 1;
+
+INSERT INTO mpa_ratings (mpa_id, name, description) VALUES
+(1, 'G', 'Без возрастных ограничений'),
+(2, 'PG', 'Детям рекомендуется смотреть с родителями'),
+(3, 'PG-13', 'Детям до 13 лет просмотр не желателен'),
+(4, 'R', 'Лицам до 17 лет обязательно присутствие взрослого'),
+(5, 'NC-17', 'Лицам до 18 лет просмотр запрещен');
+
+INSERT INTO genres (genre_id, name) VALUES
 (1, 'Комедия'),
 (2, 'Драма'),
 (3, 'Мультфильм'),
@@ -13,37 +39,46 @@ MERGE INTO genres (genre_id, name) VALUES
 (5, 'Документальный'),
 (6, 'Боевик');
 
-MERGE INTO directors (director_id, name) VALUES
-(1, 'Квентин Тарантино'),
-(2, 'Кристофер Нолан'),
-(3, 'Стивен Спилберг'),
-(4, 'Джеймс Кэмерон'),
-(5, 'Мартин Скорсезе'),
-(6, 'Андрей Тарковский');
+INSERT INTO directors (name) VALUES
+('Квентин Тарантино'),
+('Кристофер Нолан'),
+('Стивен Спилберг'),
+('Джеймс Кэмерон'),
+('Мартин Скорсезе'),
+('Андрей Тарковский');
 
-ALTER TABLE directors ALTER COLUMN director_id RESTART WITH 7;
+INSERT INTO event_type (type_id, event_type) VALUES
+(1, 'LIKE'),
+(2, 'REVIEW'),
+(3, 'FRIEND'),
+(4, 'FEEDBACK');
 
-MERGE INTO users (user_id, email, login, name, birthday) VALUES
-(1, 'user1@example.com', 'user1', 'User One', '1990-01-01'),
-(2, 'user2@example.com', 'user2', 'User Two', '1990-05-05'),
-(3, 'user3@example.com', 'user3', 'User Three', '1990-03-03');
+INSERT INTO event_operation (operation_id, operation_type) VALUES
+(1, 'REMOVE'),
+(2, 'ADD'),
+(3, 'UPDATE');
 
-MERGE INTO films (film_id, name, description, release_date, duration, mpa_id) VALUES
-(1, 'Test Film 1_B', 'Test Description 1', '2020-01-01', 120, 1),
-(2, 'Test Film 2_ТА', 'Test Description 2', '2021-01-01', 150, 2);
+INSERT INTO users (email, login, name, birthday) VALUES
+('user1@example.com', 'user1', 'User One', '1990-01-01'),
+('user2@example.com', 'user2', 'User Two', '1990-05-05'),
+('user3@example.com', 'user3', 'User Three', '1990-03-03');
 
-MERGE INTO friends (user_id, friend_id, confirmed) VALUES
+INSERT INTO films (name, description, release_date, duration, mpa_id) VALUES
+('Test Film 1_В', 'Test Description 1', '2020-01-01', 120, 1), --ru
+('Test Film 2_ТА', 'Test Description 2', '2021-01-01', 150, 2); --ru
+
+INSERT INTO friends (user_id, friend_id, confirmed) VALUES
 (1, 3, TRUE),
 (2, 3, TRUE);
 
-MERGE INTO likes (film_id, user_id) VALUES
+INSERT INTO likes (film_id, user_id) VALUES
 (1, 1),
 (1, 2);
 
-MERGE INTO film_genre (film_id, genre_id) VALUES
+INSERT INTO film_genre (film_id, genre_id) VALUES
 (1, 1),
 (1, 2);
 
-MERGE INTO film_directors (film_id, director_id) VALUES
+INSERT INTO film_directors (film_id, director_id) VALUES
 (1, 1),
 (2, 2);
