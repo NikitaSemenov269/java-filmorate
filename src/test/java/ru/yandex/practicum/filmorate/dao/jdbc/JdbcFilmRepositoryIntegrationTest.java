@@ -19,6 +19,8 @@ import java.time.LocalDate;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -68,7 +70,7 @@ public class JdbcFilmRepositoryIntegrationTest {
         List<Film> films = filmRepository.findAllFilms();
 
         assertThat(films).hasSize(2);
-        assertThat(films).extracting(Film::getName).containsExactlyInAnyOrder("Test Film 1", "Test Film 2");
+        assertThat(films).extracting(Film::getName).containsExactlyInAnyOrder("Test Film 1_B", "Test Film 2_A");
     }
 
     @Test
@@ -122,4 +124,66 @@ public class JdbcFilmRepositoryIntegrationTest {
 
         assertThat(popularFilms).hasSize(2);
     }
+
+    @Test
+    public void testGetResultSearchForFilmsByTitle() {
+        List<Film> films = filmRepository.findAllFilms();
+        assertThat(films).hasSize(2);
+
+        Film film1 = films.get(0); // name = Test Film 1_B
+        Film film2 = films.get(1); // name = Test Film 2_ТА
+        String query = "а";
+        Collection<Film> filmTest = filmRepository.getResultSearchForFilmsByTitle(query);
+
+        assertThat(filmTest).hasSize(1);
+        assertFalse(filmTest.contains(film1));
+        assertTrue(filmTest.contains(film2));
+
+    }
+
+    @Test
+    public void testGetResultSearchForFilmsByDirector() {
+        List<Film> films = filmRepository.findAllFilms();
+        assertThat(films).hasSize(2);
+
+        Film film1 = films.get(0); // director = Квентин Тарантино
+        Film film2 = films.get(1); // director = Кристофер Нолан
+
+        String query = "Венти";
+        Collection<Film> filmTest = filmRepository.getResultSearchForFilmsByDirector(query);
+
+        assertThat(filmTest).hasSize(1);
+        assertFalse(filmTest.contains(film2));
+        assertTrue(filmTest.contains(film1));
+    }
+
+    @Test
+    public void testGetResultSearchForFilmsByDirectorAndTitle() {
+        List<Film> films = filmRepository.findAllFilms();
+        assertThat(films).hasSize(2);
+
+        Film film1 = films.get(0); // director = Квентин Тарантино
+        Film film2 = films.get(1); // name = Test Film 2_ТА
+
+        String query = "та";
+        Collection<Film> filmTest = filmRepository.getResultSearchForFilmsByDirectorAndTitle(query);
+
+        assertThat(filmTest).hasSize(2);
+        assertTrue(filmTest.contains(film1));
+        assertTrue(filmTest.contains(film2));
+    }
+
+    @Test
+    public void failTestGetResultSearchForFilmsByDirectorAndTitle() {
+        List<Film> films = filmRepository.findAllFilms();
+        assertThat(films).hasSize(2);
+
+        Film film1 = films.get(0); // director = Квентин Тарантино
+        Film film2 = films.get(1); // name = Test Film 2_ТА
+
+        String query = "fail";
+        Collection<Film> filmTest = filmRepository.getResultSearchForFilmsByDirectorAndTitle(query);
+        assertThat(filmTest).hasSize(0);
+    }
 }
+

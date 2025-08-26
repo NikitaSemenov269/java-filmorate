@@ -29,8 +29,8 @@ MERGE INTO users (user_id, email, login, name, birthday) VALUES
 (3, 'user3@example.com', 'user3', 'User Three', '1990-03-03');
 
 MERGE INTO films (film_id, name, description, release_date, duration, mpa_id) VALUES
-(1, 'Test Film 1', 'Test Description 1', '2020-01-01', 120, 1),
-(2, 'Test Film 2', 'Test Description 2', '2021-01-01', 150, 2);
+(1, 'Test Film 1_B', 'Test Description 1', '2020-01-01', 120, 1),
+(2, 'Test Film 2_ТА', 'Test Description 2', '2021-01-01', 150, 2);
 
 MERGE INTO friends (user_id, friend_id, confirmed) VALUES
 (1, 3, TRUE),
