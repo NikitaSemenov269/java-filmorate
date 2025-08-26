@@ -30,10 +30,10 @@ public class UserDeleteControllerTest {
                 "}\n";
 
         mvc.perform(post("/users")
-                .contentType("application/json")
-                .content(jsonString)
+                        .contentType("application/json")
+                        .content(jsonString)
                 ).andExpect(status().isOk())
-                        .andExpect(jsonPath("$.email").value("friend@common.ru"));
+                .andExpect(jsonPath("$.email").value("friend@common.ru"));
 
 
         mvc.perform(delete("/users/1"))
