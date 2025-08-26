@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.dao.BaseRepository;
 import ru.yandex.practicum.filmorate.dao.interfaces.GenreRepository;
+import ru.yandex.practicum.filmorate.mappers.GenreRowMapper;
 import ru.yandex.practicum.filmorate.model.Genre;
 
 import java.util.*;
@@ -22,7 +23,7 @@ public class JdbcGenreRepository extends BaseRepository<Genre> implements GenreR
             ORDER BY g.genre_id
             """;
 
-    public JdbcGenreRepository(NamedParameterJdbcOperations jdbc, RowMapper<Genre> mapper) {
+    public JdbcGenreRepository(NamedParameterJdbcOperations jdbc, GenreRowMapper mapper) {
         super(jdbc, mapper);
     }
 
