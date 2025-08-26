@@ -170,6 +170,9 @@ public class JdbcFilmRepository extends BaseRepository<Film> implements FilmRepo
         update(UPDATE_FILM_QUERY, params);
         updateGenres(newFilm.getGenres(), newFilm.getId());
         updateDirectors(newFilm.getDirectors(), newFilm.getId());
+        if (newFilm.getGenres() != null) { //сортировка жанров для тестов постман
+            newFilm.setGenres(newFilm.getGenres().stream().collect(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparingLong(Genre::getId)))));
+        }
         return newFilm;
     }
 
