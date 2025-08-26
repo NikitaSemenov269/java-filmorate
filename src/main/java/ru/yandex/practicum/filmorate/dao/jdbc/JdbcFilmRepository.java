@@ -50,14 +50,27 @@ public class JdbcFilmRepository extends BaseRepository<Film> implements FilmRepo
 
     private static final String GET_POPULAR_FILM_QUERY = """
             SELECT f.*, m.mpa_id AS mpa_id, m.name AS mpa_name, m.description AS mpa_description,
-            COUNT(l.user_id) AS like_count, fg.GENRE_ID
+            COUNT(l.user_id) AS like_count
             FROM films f
             JOIN mpa_ratings m ON f.mpa_id = m.mpa_id
-            LEFT JOIN film_genre fg ON fg.FILM_ID = f.FILM_ID AND fg.GENRE_ID = :genreId
             LEFT JOIN likes l ON f.film_id = l.film_id
             WHERE YEAR(f.RELEASE_DATE) = :year OR :year = 2999
             GROUP BY f.film_id, f.name, f.description, f.release_date, f.duration, f.mpa_id,
-                 m.mpa_id, m.name, m.description, fg.GENRE_ID
+                 m.mpa_id, m.name, m.description
+            ORDER BY like_count DESC
+            LIMIT :count
+            """;
+
+    private static final String GET_POPULAR_FILM_GENRE_QUERY = """
+            SELECT f.*, m.mpa_id AS mpa_id, m.name AS mpa_name, m.description AS mpa_description,
+            COUNT(l.user_id) AS like_count
+            FROM films f
+            JOIN mpa_ratings m ON f.mpa_id = m.mpa_id
+            JOIN film_genre fg ON fg.FILM_ID = f.FILM_ID AND fg.GENRE_ID = :genreId
+            LEFT JOIN likes l ON f.film_id = l.film_id
+            WHERE YEAR(f.RELEASE_DATE) = :year OR :year = 2999
+            GROUP BY f.film_id, f.name, f.description, f.release_date, f.duration, f.mpa_id,
+                 m.mpa_id, m.name, m.description
             ORDER BY like_count DESC
             LIMIT :count
             """;
@@ -173,7 +186,17 @@ public class JdbcFilmRepository extends BaseRepository<Film> implements FilmRepo
         params.put("count", count);
         params.put("genreId", genreId);
         params.put("year", year);
-        return findMany(GET_POPULAR_FILM_QUERY, params);
+        Collection<Film> films;
+        if (genreId != null) {
+            films = findMany(GET_POPULAR_FILM_GENRE_QUERY, params);
+        } else {
+            films = findMany(GET_POPULAR_FILM_QUERY, params);
+        }
+        for (Film film : films) {
+            film.setGenres(genreRepository.findGenreByFilmId(film.getId()));
+            film.setDirectors(directorRepository.findDirectorByFilmId(film.getId()));
+        }
+        return films;
     }
 
     public void updateDirectors(Set<Director> directors, Long filmId) {
