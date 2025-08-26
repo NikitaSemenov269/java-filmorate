@@ -38,6 +38,7 @@ public class FilmService {
 
     public Film updateFilm(Film newFilm) {
         log.info("Попытка обновления фильма с ID: {}", newFilm.getId());
+        validationService.validateFilmExists(newFilm.getId());
         validationService.validateFilm(newFilm);
         Film updatedFilm = filmRepository.updateFilm(newFilm);
         log.info("Фильм с ID {} обновлен", newFilm.getId());
