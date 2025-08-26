@@ -118,8 +118,95 @@ public class JdbcFilmRepositoryIntegrationTest {
         filmRepository.createFilm(film1);
         filmRepository.createFilm(film2);
 
-        Collection<Film> popularFilms = filmRepository.getPopularFilms(2);
+        Collection<Film> popularFilms = filmRepository.getPopularFilms(2, null, 2999);
 
         assertThat(popularFilms).hasSize(2);
+    }
+
+    @Test
+    public void testGetPopularFilmsByGenre() {
+        Film film1 = Film.builder()
+                .name("Popular Film")
+                .description("Popular Description")
+                .releaseDate(LocalDate.of(2020, 1, 1))
+                .duration(120)
+                .mpa(MpaRating.builder().id(1L).name("G").build())
+                .genres(new HashSet<>())
+                .build();
+        Genre genre = new Genre(3L, "Мультфильм");
+        Set<Genre> genres = new HashSet<>();
+        genres.add(genre);
+        Film film2 = Film.builder()
+                .name("Less Popular Film")
+                .description("Less Popular Description")
+                .releaseDate(LocalDate.of(2021, 1, 1))
+                .duration(150)
+                .mpa(MpaRating.builder().id(2L).name("PG").build())
+                .genres(genres)
+                .build();
+
+        filmRepository.createFilm(film1);
+        filmRepository.createFilm(film2);
+
+        Collection<Film> popularFilms = filmRepository.getPopularFilms(1, genre.getId(), 2999);
+        System.out.println(popularFilms);
+        assertThat(popularFilms).hasSize(1);
+    }
+
+    @Test
+    public void testGetPopularFilmsByGenreAndYear() {
+        Film film1 = Film.builder()
+                .name("Popular Film")
+                .description("Popular Description")
+                .releaseDate(LocalDate.of(2020, 1, 1))
+                .duration(120)
+                .mpa(MpaRating.builder().id(1L).name("G").build())
+                .genres(new HashSet<>())
+                .build();
+        Genre genre = new Genre(3L, "Мультфильм");
+        Set<Genre> genres = new HashSet<>();
+        genres.add(genre);
+        Film film2 = Film.builder()
+                .name("Less Popular Film")
+                .description("Less Popular Description")
+                .releaseDate(LocalDate.of(2021, 1, 1))
+                .duration(150)
+                .mpa(MpaRating.builder().id(2L).name("PG").build())
+                .genres(genres)
+                .build();
+
+        filmRepository.createFilm(film1);
+        filmRepository.createFilm(film2);
+
+        Collection<Film> popularFilms = filmRepository.getPopularFilms(1, genre.getId(), 2021);
+        System.out.println(popularFilms);
+        assertThat(popularFilms).hasSize(1);
+    }
+
+    @Test
+    public void testGetPopularFilmsByYear() {
+        Film film1 = Film.builder()
+                .name("Popular Film")
+                .description("Popular Description")
+                .releaseDate(LocalDate.of(2020, 1, 1))
+                .duration(120)
+                .mpa(MpaRating.builder().id(1L).name("G").build())
+                .genres(new HashSet<>())
+                .build();
+        Film film2 = Film.builder()
+                .name("Less Popular Film")
+                .description("Less Popular Description")
+                .releaseDate(LocalDate.of(2021, 1, 1))
+                .duration(150)
+                .mpa(MpaRating.builder().id(2L).name("PG").build())
+                .genres(new HashSet<>())
+                .build();
+
+        filmRepository.createFilm(film1);
+        filmRepository.createFilm(film2);
+
+        Collection<Film> popularFilms = filmRepository.getPopularFilms(1, null, 2021);
+        System.out.println(popularFilms);
+        assertThat(popularFilms).hasSize(1);
     }
 }
