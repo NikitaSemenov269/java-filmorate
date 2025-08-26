@@ -70,7 +70,7 @@ public class JdbcFilmRepositoryIntegrationTest {
         List<Film> films = filmRepository.findAllFilms();
 
         assertThat(films).hasSize(2);
-        assertThat(films).extracting(Film::getName).containsExactlyInAnyOrder("Test Film 1_B", "Test Film 2_A");
+        assertThat(films).extracting(Film::getName).containsExactlyInAnyOrder("Test Film 1_B", "Test Film 2_ТА");
     }
 
     @Test
