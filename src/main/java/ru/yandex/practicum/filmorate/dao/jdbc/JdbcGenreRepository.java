@@ -42,8 +42,9 @@ public class JdbcGenreRepository extends BaseRepository<Genre> implements GenreR
     public Set<Genre> findGenreByFilmId(Long filmId) {
         Map<String, Object> params = new HashMap<>();
         params.put("filmId", filmId);
-        return findMany(FIND_FILM_GENRES_BY_ID_QUERY, params).stream().collect(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparingLong(Genre::getId))));
+        return findMany(FIND_FILM_GENRES_BY_ID_QUERY, params).stream()
+                .collect(Collectors.toCollection(()
+                        -> new TreeSet<>(Comparator.comparingLong(Genre::getId))));
     }
-
 }
 
