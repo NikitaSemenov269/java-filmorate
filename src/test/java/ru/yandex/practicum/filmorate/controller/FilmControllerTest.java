@@ -5,17 +5,13 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import ru.yandex.practicum.filmorate.dao.jdbc.JdbcUserRepository;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.service.LikeService;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
-import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -151,84 +147,4 @@ public class FilmControllerTest {
 
         verify(likeService, times(1)).removeLike(filmId, userId);
     }
-
-//    @Test
-//    public void testGetResultSearchForFilmsByTitle() {
-//        Collection<Film> films = new ArrayList<>(filmService.findAllFilms());
-//
-//        List filmsTest = new ArrayList<Film>(films);
-//
-//
-//        assertThat(films).hasSize(2);
-//
-//        Film film1 = films.get(0);
-//        Film film2 = films.get(1);
-//
-//        film1.setName("Хатико");
-//        film2.setName("Чужой");
-//
-//        String query = "а";
-//        String by = "title";
-//
-//        Collection<Film> filmTest = filmService.getResultSearchForFilms(query, by);
-//
-//        assertThat(filmTest).hasSize(1);
-//        assertTrue(filmTest.contains(film1));
-//        assertFalse(filmTest.contains(film2));
-//    }
-//
-//    @Test
-//    public void testGetResultSearchForFilmsByDirector() {
-//        List<Film> films = (List<Film>) filmService.findAllFilms();
-//        assertThat(films).hasSize(2);
-//
-//        Film film1 = films.get(0); // director = Квентин Тарантино
-//        Film film2 = films.get(1); // director = Кристофер Нолан
-//
-//        String query = "Венти";
-//        String by = "director";
-//
-//        Collection<Film> filmTest = filmService.getResultSearchForFilms(query, by);
-//
-//        assertThat(filmTest).hasSize(1);
-//        assertTrue(filmTest.contains(film1));
-//        assertFalse(filmTest.contains(film2));
-//    }
-
-//    @Test
-//    public void testGetResultSearchForFilmsByDirectorAndTitle() {
-//        List<Film> films = (List<Film>) filmService.findAllFilms();
-//        assertThat(films).hasSize(2);
-//
-//        Film film1 = films.get(0); // director = Квентин Тарантино
-//        Film film2 = films.get(1);
-//
-//        film2.setName("Титаник");
-//
-//        String query = "та";
-//        String by = "title,director";
-//
-//        Collection<Film> filmTest = filmService.getResultSearchForFilms(query, by);
-//
-//        assertThat(filmTest).hasSize(2);
-//        assertTrue(filmTest.contains(film1));
-//        assertTrue(filmTest.contains(film2));
-//    }
-
-//    @Test
-//    public void failTestGetResultSearchForFilmsByDirectorAndTitle() {
-//        List<Film> films = (List<Film>) filmService.findAllFilms();
-//        assertThat(films).hasSize(2);
-//
-//        Film film1 = films.get(0); // director = Квентин Тарантино
-//        Film film2 = films.get(1);
-//
-//        film2.setName("Титаник");
-//
-//        String by = "title,director";
-//        String query = "fail";
-//
-//        Collection<Film> filmTest = filmService.getResultSearchForFilms(query, by);
-//        assertThat(filmTest).hasSize(0);
-//    }
 }

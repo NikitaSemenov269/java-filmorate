@@ -1,5 +1,7 @@
 package ru.yandex.practicum.filmorate.dao.jdbc;
 
+import org.assertj.core.api.AssertionsForInterfaceTypes;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -19,6 +21,8 @@ import java.time.LocalDate;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -49,7 +53,6 @@ public class JdbcFilmRepositoryIntegrationTest {
     @Test
     public void testFindFilmById() {
         Film film = Film.builder().name("Test Film").description("Test Description").releaseDate(LocalDate.of(2020, 1, 1)).duration(120).mpa(MpaRating.builder().id(1L).name("G").description("General Audience").build()).genres(new HashSet<>()).directors(new HashSet<>()).build();
-
         Film createdFilm = filmRepository.createFilm(film);
 
         Optional<Film> foundFilm = filmRepository.getFilmById(createdFilm.getId());
@@ -208,5 +211,84 @@ public class JdbcFilmRepositoryIntegrationTest {
         Collection<Film> popularFilms = filmRepository.getPopularFilms(1, null, 2021);
         System.out.println(popularFilms);
         assertThat(popularFilms).hasSize(1);
+    }
+
+    @Test
+    public void testGetResultSearchForFilmsByTitle() {
+
+        Film film1 = Film.builder().name("Тестовый фильм А").description("Test Description").releaseDate(LocalDate.of(2020, 1, 1)).duration(120).mpa(MpaRating.builder().id(1L).name("G").description("General Audiences").build()).genres(new HashSet<>(Arrays.asList(Genre.builder().id(1L).name("Комедия").build(), Genre.builder().id(2L).name("Драма").build()))).directors(new HashSet<>(Arrays.asList(Director.builder().id(1L).name("Квентин Тарантино").build()))).build();
+        Film film2 = Film.builder().name("Тестовый фильм Б").description("Test Description").releaseDate(LocalDate.of(2015, 5, 1)).duration(140).mpa(MpaRating.builder().id(1L).name("G").description("General Audiences").build()).genres(new HashSet<>(Arrays.asList(Genre.builder().id(1L).name("Комедия").build(), Genre.builder().id(2L).name("Драма").build()))).directors(new HashSet<>(Arrays.asList(Director.builder().id(2L).name("Кристофер Нолан").build()))).build();
+
+        Film createdFilm1 = filmRepository.createFilm(film1);
+        Film createdFilm2 = filmRepository.createFilm(film2);
+
+        String query = "а";
+
+        Collection<Film> filmTest = filmRepository.getResultSearchForFilmsByTitle(query);
+
+        AssertionsForInterfaceTypes.assertThat(filmTest).hasSize(1);
+        assertTrue(filmTest.contains(createdFilm1));
+        assertFalse(filmTest.contains(createdFilm2));
+
+        filmRepository.deleteFilm(createdFilm1.getId());
+        filmRepository.deleteFilm(createdFilm2.getId());
+    }
+
+    @Test
+    public void testGetResultSearchForFilmsByDirector() {
+        Film film1 = Film.builder().name("Тестовый фильм А").description("Test Description").releaseDate(LocalDate.of(2020, 1, 1)).duration(120).mpa(MpaRating.builder().id(1L).name("G").description("General Audiences").build()).genres(new HashSet<>(Arrays.asList(Genre.builder().id(1L).name("Комедия").build(), Genre.builder().id(2L).name("Драма").build()))).directors(new HashSet<>(Arrays.asList(Director.builder().id(1L).name("Квентин Тарантино").build()))).build();
+        Film film2 = Film.builder().name("Тестовый фильм Б").description("Test Description").releaseDate(LocalDate.of(2015, 5, 1)).duration(140).mpa(MpaRating.builder().id(1L).name("G").description("General Audiences").build()).genres(new HashSet<>(Arrays.asList(Genre.builder().id(1L).name("Комедия").build(), Genre.builder().id(2L).name("Драма").build()))).directors(new HashSet<>(Arrays.asList(Director.builder().id(2L).name("Кристофер Нолан").build()))).build();
+
+        filmRepository.deleteFilm(1L);
+        filmRepository.deleteFilm(2L);
+
+        Film createdFilm1 = filmRepository.createFilm(film1);
+        Film createdFilm2 = filmRepository.createFilm(film2);
+
+        String query = "Ве";
+
+        Collection<Film> filmTest = filmRepository.getResultSearchForFilmsByDirector(query);
+
+        assertThat(filmTest).hasSize(1);
+        assertTrue(filmTest.contains(createdFilm1));
+        assertFalse(filmTest.contains(createdFilm2));
+
+    }
+
+    @Test
+    public void testGetResultSearchForFilmsByDirectorAndTitle() {
+        Film film1 = Film.builder().name("Тестовый фильм Нолан").description("Test Description").releaseDate(LocalDate.of(2020, 1, 1)).duration(120).mpa(MpaRating.builder().id(1L).name("G").description("General Audiences").build()).genres(new HashSet<>(Arrays.asList(Genre.builder().id(1L).name("Комедия").build(), Genre.builder().id(2L).name("Драма").build()))).directors(new HashSet<>(Arrays.asList(Director.builder().id(1L).name("Квентин Тарантино").build()))).build();
+        Film film2 = Film.builder().name("Тестовый фильм Б").description("Test Description").releaseDate(LocalDate.of(2015, 5, 1)).duration(140).mpa(MpaRating.builder().id(1L).name("G").description("General Audiences").build()).genres(new HashSet<>(Arrays.asList(Genre.builder().id(1L).name("Комедия").build(), Genre.builder().id(2L).name("Драма").build()))).directors(new HashSet<>(Arrays.asList(Director.builder().id(2L).name("Кристофер Нолан").build()))).build();
+
+        filmRepository.deleteFilm(1L);
+        filmRepository.deleteFilm(2L);
+
+        Film createdFilm1 = filmRepository.createFilm(film1);
+        Film createdFilm2 = filmRepository.createFilm(film2);
+
+        String query = "Нолан";
+
+        Collection<Film> filmTest = filmRepository.getResultSearchForFilmsByDirectorAndTitle(query);
+
+        assertThat(filmTest).hasSize(2);
+        assertTrue(filmTest.contains(createdFilm1));
+        assertTrue(filmTest.contains(createdFilm2));
+    }
+
+    @Test
+    public void failTestGetResultSearchForFilmsByDirectorAndTitle() {
+        Film film1 = Film.builder().name("Тестовый фильм Нолан").description("Test Description").releaseDate(LocalDate.of(2020, 1, 1)).duration(120).mpa(MpaRating.builder().id(1L).name("G").description("General Audiences").build()).genres(new HashSet<>(Arrays.asList(Genre.builder().id(1L).name("Комедия").build(), Genre.builder().id(2L).name("Драма").build()))).directors(new HashSet<>(Arrays.asList(Director.builder().id(1L).name("Квентин Тарантино").build()))).build();
+        Film film2 = Film.builder().name("Тестовый фильм Б").description("Test Description").releaseDate(LocalDate.of(2015, 5, 1)).duration(140).mpa(MpaRating.builder().id(1L).name("G").description("General Audiences").build()).genres(new HashSet<>(Arrays.asList(Genre.builder().id(1L).name("Комедия").build(), Genre.builder().id(2L).name("Драма").build()))).directors(new HashSet<>(Arrays.asList(Director.builder().id(2L).name("Кристофер Нолан").build()))).build();
+
+        Film createdFilm1 = filmRepository.createFilm(film1);
+        Film createdFilm2 = filmRepository.createFilm(film2);
+
+        String query = "абра-кадабра";
+
+        Collection<Film> filmTest = filmRepository.getResultSearchForFilmsByDirectorAndTitle(query);
+        assertThat(filmTest).hasSize(0);
+
+        filmRepository.deleteFilm(createdFilm1.getId());
+        filmRepository.deleteFilm(createdFilm2.getId());
     }
 }
