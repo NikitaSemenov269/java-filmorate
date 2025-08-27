@@ -25,10 +25,7 @@ public class JdbcReviewRepository extends BaseRepository<Review> implements Revi
             update reviews
             set
                 content = :content,
-                is_positive = :isPositive,
-                user_id = :userId,
-                film_id = :filmId,
-                useful = :useful
+                is_positive = :isPositive
             where
                 review_id = :reviewId
             ;
@@ -108,16 +105,20 @@ public class JdbcReviewRepository extends BaseRepository<Review> implements Revi
 
     @Override
     public Review updateReview(Review review) {
+        Review newReview = getReviewById(review.getReviewId()).get();
+        //newReview.setUseful(review.getUseful());
+        newReview.setContent(review.getContent());
+        newReview.setIsPositive(review.getIsPositive());
         Map<String, Object> params = new HashMap<>();
         params.put("reviewId", review.getReviewId());
         params.put("content", review.getContent());
         params.put("isPositive", review.getIsPositive());
-        params.put("userId", review.getUserId());
-        params.put("filmId", review.getFilmId());
-        params.put("useful", review.getUseful());
+        //params.put("userId", review.getUserId());
+        //params.put("filmId", review.getFilmId());
+        //params.put("useful", review.getUseful());
 
         update(UPDATE_REVIEW_QUERY, params);
-        return review;
+        return newReview;
     }
 
     @Override
