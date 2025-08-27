@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.dao.jdbc;
 
 import org.assertj.core.api.AssertionsForInterfaceTypes;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
