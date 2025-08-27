@@ -8,10 +8,7 @@ import ru.yandex.practicum.filmorate.dao.BaseRepository;
 import ru.yandex.practicum.filmorate.dao.interfaces.ReviewRepository;
 import ru.yandex.practicum.filmorate.model.Review;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 @Qualifier("reviewRepository")
@@ -59,6 +56,15 @@ public class JdbcReviewRepository extends BaseRepository<Review> implements Revi
                 from reviews
                 where
                     film_id = :filmId
+                order by useful desc
+                limit :count
+                ;
+            """;
+
+    private static final String GET_ALL_REVIEWS_QUERY = """
+                select
+                    *
+                from reviews
                 order by useful desc
                 limit :count
                 ;
@@ -134,6 +140,13 @@ public class JdbcReviewRepository extends BaseRepository<Review> implements Revi
         params.put("filmId", filmId);
         params.put("count", count);
         return findMany(GET_POPULAR_REVIEWS_BY_FILM_ID_QUERY, params);
+    }
+
+    @Override
+    public Collection<Review> getAllReviews(int count) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("count", count);
+        return findMany(GET_ALL_REVIEWS_QUERY, params);
     }
 
     @Override

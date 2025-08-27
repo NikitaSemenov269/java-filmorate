@@ -65,7 +65,13 @@ public class ReviewService {
         if (count <= 0) {
             throw new ValidationException("Количество отзывов должно быть положительным числом.");
         }
-        return reviewRepository.getPopularReviews(filmId, count);
+        if (filmId == null) {
+            log.info("Получение всех отзывов в количестве: {}", count);
+            return reviewRepository.getAllReviews(count);
+        } else {
+            log.info("Получение отзывов для filmId: {} в количестве: {}", filmId, count);
+            return reviewRepository.getPopularReviews(filmId, count);
+        }
     }
 
     public void addLikeReview(Long reviewId, Long userId) {
