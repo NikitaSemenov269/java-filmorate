@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Builder(toBuilder = true)
 @AllArgsConstructor
 public class Event {
-    private Long id;
+    private Long eventId;
     @Min(value = 1, message = "Id должно быть положительным числом.")
     private Long userId;
     @Min(value = 1, message = "Id должно быть положительным числом.")
