@@ -11,6 +11,10 @@ import java.sql.SQLException;
 public class EstimationRowMapper implements RowMapper<Estimation> {
     @Override
     public Estimation mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-        return Estimation.builder().reviewId(resultSet.getLong("review_id")).userId(resultSet.getLong("user_id")).isLike(resultSet.getBoolean("is_like")).build();
+        return Estimation.builder()
+                .reviewId(resultSet.getLong("review_id"))
+                .userId(resultSet.getLong("user_id"))
+                .isLike(resultSet.getBoolean("is_like"))
+                .build();
     }
 }

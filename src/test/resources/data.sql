@@ -13,27 +13,14 @@ MERGE INTO genres (genre_id, name) VALUES
 (5, 'Документальный'),
 (6, 'Боевик');
 
-MERGE INTO directors (director_id, name) VALUES
-(1, 'Квентин Тарантино'),
-(2, 'Кристофер Нолан'),
-(3, 'Стивен Спилберг'),
-(4, 'Джеймс Кэмерон'),
-(5, 'Мартин Скорсезе'),
-(6, 'Андрей Тарковский');
-
-ALTER TABLE directors ALTER COLUMN director_id RESTART WITH 7;
-
 MERGE INTO users (user_id, email, login, name, birthday) VALUES
 (1, 'user1@example.com', 'user1', 'User One', '1990-01-01'),
 (2, 'user2@example.com', 'user2', 'User Two', '1990-05-05'),
 (3, 'user3@example.com', 'user3', 'User Three', '1990-03-03');
-ALTER TABLE users ALTER COLUMN user_id RESTART WITH 4;
 
 MERGE INTO films (film_id, name, description, release_date, duration, mpa_id) VALUES
 (1, 'Test Film 1', 'Test Description 1', '2020-01-01', 120, 1),
 (2, 'Test Film 2', 'Test Description 2', '2021-01-01', 150, 2);
-
-ALTER TABLE films ALTER COLUMN film_id RESTART WITH 3;
 
 MERGE INTO friends (user_id, friend_id, confirmed) VALUES
 (1, 3, TRUE),
@@ -45,8 +32,5 @@ MERGE INTO likes (film_id, user_id) VALUES
 
 MERGE INTO film_genre (film_id, genre_id) VALUES
 (1, 1),
-(1, 2);
-
-MERGE INTO film_directors (film_id, director_id) VALUES
-(1, 1),
-(2, 2);
+(1, 2),
+(2, 3);

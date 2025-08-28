@@ -16,7 +16,6 @@ public class JdbcLikeRepository implements LikeRepository {
     @Override
     public void addLike(Long filmId, Long userId) {
         String sql = "INSERT INTO likes (film_id, user_id) VALUES (:filmId, :userId)";
-        removeLike(filmId,userId);
         Map<String, Object> params = new HashMap<>();
         params.put("filmId", filmId);
         params.put("userId", userId);

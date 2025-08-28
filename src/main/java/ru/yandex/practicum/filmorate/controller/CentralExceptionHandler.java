@@ -21,13 +21,15 @@ public class CentralExceptionHandler {
     @ExceptionHandler()
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleValidationExceptions(final MethodArgumentNotValidException e) {
-        String errorMessage = e.getBindingResult().getAllErrors().stream().map(error -> {
-            if (error instanceof FieldError) {
-                FieldError fieldError = (FieldError) error;
-                return fieldError.getField() + ": " + fieldError.getDefaultMessage();
-            }
-            return error.getDefaultMessage();
-        }).collect(Collectors.joining("; "));
+        String errorMessage = e.getBindingResult().getAllErrors().stream()
+                .map(error -> {
+                    if (error instanceof FieldError) {
+                        FieldError fieldError = (FieldError) error;
+                        return fieldError.getField() + ": " + fieldError.getDefaultMessage();
+                    }
+                    return error.getDefaultMessage();
+                })
+                .collect(Collectors.joining("; "));
 
         log.warn("Ошибка валидации: {}", errorMessage);
         return new ErrorResponse(errorMessage);

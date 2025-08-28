@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dao.interfaces.EventRepository;
-import ru.yandex.practicum.filmorate.dao.interfaces.FriendRepository;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.dao.interfaces.FriendRepository;
 
 import java.util.Collection;
 
