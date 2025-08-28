@@ -15,7 +15,7 @@ public class LikeService {
 
     public void addLike(Long filmId, Long userId) {
         log.info("Попытка добавления лайка фильму {} от пользователя {}", filmId, userId);
-        validationService.validateFilmAndUserIds(filmId, userId);
+        //validationService.validateFilmAndUserIds(filmId, userId);
         validationService.validateFilmExists(filmId);
         validationService.validateUserExists(userId);
         likeRepository.addLike(filmId, userId);
