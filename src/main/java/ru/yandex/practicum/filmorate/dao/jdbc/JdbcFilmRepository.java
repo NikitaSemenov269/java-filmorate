@@ -139,7 +139,7 @@ public class JdbcFilmRepository extends BaseRepository<Film> implements FilmRepo
             LEFT JOIN directors d ON fd.director_id = d.director_id
             WHERE LOWER(f.name) LIKE LOWER(CONCAT('%', :query, '%'))
                OR LOWER(d.name) LIKE LOWER(CONCAT('%', :query, '%'))
-            ORDER BY f.film_id DESC
+            ORDER BY f.film_id
             """;
 
     private final GenreRepository genreRepository;
