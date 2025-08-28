@@ -24,20 +24,13 @@ public class FilmController {
     }
 
     @GetMapping("/popular")
-    public Collection<Film> getPopularFilms(@RequestParam(defaultValue = "100000") int count, @RequestParam(required = false) Long genreId, @RequestParam(required = false, defaultValue = "2999") int year) {
-        return filmService.getTopRatedMovies(count, genreId, year);
+    public Collection<Film> getPopularFilms(@RequestParam(defaultValue = "10") int count) {
+        return filmService.getTopRatedMovies(count);
     }
 
     @GetMapping("/{id}")
     public Film getFilmById(@PathVariable Long id) {
         return filmService.getFilmById(id);
-    }
-
-    @GetMapping("/search")
-    public Collection<Film> searchFilms(
-            @RequestParam String query,
-            @RequestParam String by) {
-        return filmService.getResultSearchForFilms(query, by);
     }
 
     @PostMapping
@@ -56,27 +49,14 @@ public class FilmController {
     }
 
     @PutMapping("/{filmId}/like/{userId}")
-
     public void addLikeForFilm(@PathVariable Long filmId,
-                               @PathVariable Long userId) {
+                        @PathVariable Long userId) {
         likeService.addLike(filmId, userId);
     }
 
     @DeleteMapping("/{filmId}/like/{userId}")
     public void removeLikeForFilm(@PathVariable Long filmId,
-                                  @PathVariable Long userId) {
+                           @PathVariable Long userId) {
         likeService.removeLike(filmId, userId);
-    }
-
-    @GetMapping("/director/{directorId}")
-    public Collection<Film> getFilmsByDirector(@PathVariable Long directorId, @RequestParam(required = false) String sortBy) {
-        log.info("Запрос на получение фильмов режиссера ID: {}, сортировка по: {}", directorId, sortBy);
-        return filmService.getSortedFilmsByDirector(directorId, sortBy);
-    }
-
-    @GetMapping("/common")
-    public Collection<Film> getCommonFriendFilms(@RequestParam Long userId, @RequestParam Long friendId) {
-        log.info("Запрос на получение общих фильмов между режиссера друзьями с ID: {},и {}", userId, friendId);
-        return filmService.getTopRatedMoviesAmongFriends(userId, friendId);
     }
 }

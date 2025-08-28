@@ -51,57 +51,12 @@ public class FilmControllerTest {
         Film film2 = mock(Film.class);
         Collection<Film> popularFilms = Arrays.asList(film1, film2);
 
-        when(filmService.getTopRatedMovies(count, null, 2999)).thenReturn(popularFilms);
+        when(filmService.getTopRatedMovies(count)).thenReturn(popularFilms);
 
-        Collection<Film> result = filmController.getPopularFilms(count, null, 2999);
-
-        assertEquals(2, result.size());
-        verify(filmService, times(1)).getTopRatedMovies(count, null, 2999);
-    }
-
-    @Test
-    public void testGetPopulateFilmsByYear() {
-        int count = 10;
-        Film film1 = mock(Film.class);
-        Film film2 = mock(Film.class);
-        Collection<Film> popularFilms = Arrays.asList(film1, film2);
-
-        when(filmService.getTopRatedMovies(count, null, 2010)).thenReturn(popularFilms);
-
-        Collection<Film> result = filmController.getPopularFilms(count, null, 2010);
+        Collection<Film> result = filmController.getPopularFilms(count);
 
         assertEquals(2, result.size());
-        verify(filmService, times(1)).getTopRatedMovies(count, null, 2010);
-    }
-
-    @Test
-    public void testGetPopulateFilmsByGenre() {
-        int count = 10;
-        Film film1 = mock(Film.class);
-        Film film2 = mock(Film.class);
-        Collection<Film> popularFilms = Arrays.asList(film1, film2);
-
-        when(filmService.getTopRatedMovies(count, 3L, 2999)).thenReturn(popularFilms);
-
-        Collection<Film> result = filmController.getPopularFilms(count, 3L, 2999);
-
-        assertEquals(2, result.size());
-        verify(filmService, times(1)).getTopRatedMovies(count, 3L, 2999);
-    }
-
-    @Test
-    public void testGetPopulateFilmsByGenreAndYear() {
-        int count = 10;
-        Film film1 = mock(Film.class);
-        Film film2 = mock(Film.class);
-        Collection<Film> popularFilms = Arrays.asList(film1, film2);
-
-        when(filmService.getTopRatedMovies(count, 3L, 2021)).thenReturn(popularFilms);
-
-        Collection<Film> result = filmController.getPopularFilms(count, 3L, 2021);
-
-        assertEquals(2, result.size());
-        verify(filmService, times(1)).getTopRatedMovies(count, 3L, 2021);
+        verify(filmService, times(1)).getTopRatedMovies(count);
     }
 
     @Test

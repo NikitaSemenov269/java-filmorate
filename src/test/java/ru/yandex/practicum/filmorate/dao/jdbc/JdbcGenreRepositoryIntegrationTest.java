@@ -30,7 +30,11 @@ public class JdbcGenreRepositoryIntegrationTest {
 
         Optional<Genre> genreOptional = genreRepository.findGenreById(genreId);
 
-        assertThat(genreOptional).isPresent().hasValueSatisfying(genre -> assertThat(genre).hasFieldOrPropertyWithValue("id", genreId));
+        assertThat(genreOptional)
+                .isPresent()
+                .hasValueSatisfying(genre ->
+                        assertThat(genre).hasFieldOrPropertyWithValue("id", genreId)
+                );
     }
 
     @Test

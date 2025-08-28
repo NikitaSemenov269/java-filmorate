@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Event;
-import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.EventService;
 import ru.yandex.practicum.filmorate.service.FriendService;
@@ -33,7 +32,8 @@ public class UserController {
     }
 
     @GetMapping("/{userId}/friends/common/{otherId}")
-    public Collection<User> getCommonFriends(@PathVariable Long userId, @PathVariable Long otherId) {
+    public Collection<User> getCommonFriends(@PathVariable Long userId,
+                                             @PathVariable Long otherId) {
         return friendService.getCommonFriends(userId, otherId);
     }
 
@@ -48,11 +48,6 @@ public class UserController {
         return userService.getUserById(id);
     }
 
-    @GetMapping("/{id}/recommendations")
-    public Collection<Film> getUserRecommendations(@PathVariable Long id) {
-        return userService.getUserRecommendations(id);
-    }
-
     @PostMapping
     public User createUser(@Valid @RequestBody User user) {
         return userService.createUser(user);
@@ -63,18 +58,15 @@ public class UserController {
         return userService.updateUser(user);
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
-    }
-
     @PutMapping("/{userId}/friends/{friendId}")
-    public void addFriend(@PathVariable Long userId, @PathVariable Long friendId) {
+    public void addFriend(@PathVariable Long userId,
+                          @PathVariable Long friendId) {
         friendService.addFriend(userId, friendId);
     }
 
     @DeleteMapping("/{userId}/friends/{friendId}")
-    public void removeFriend(@PathVariable Long userId, @PathVariable Long friendId) {
+    public void removeFriend(@PathVariable Long userId,
+                             @PathVariable Long friendId) {
         friendService.removeFriend(userId, friendId);
     }
 }
