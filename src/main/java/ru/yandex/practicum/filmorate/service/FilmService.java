@@ -3,7 +3,9 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.dao.interfaces.DirectorRepository;
 import ru.yandex.practicum.filmorate.dao.interfaces.FilmRepository;
+import ru.yandex.practicum.filmorate.dao.interfaces.GenreRepository;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -16,6 +18,8 @@ import java.util.Collection;
 public class FilmService {
     private final ValidationService validationService;
     private final FilmRepository filmRepository;
+    private final DirectorRepository directorRepository;
+    private final GenreRepository genreRepository;
 
     public Collection<Film> findAllFilms() {
         log.info("Попытка получения всех фильмов");
@@ -41,6 +45,8 @@ public class FilmService {
         validationService.validateFilmExists(newFilm.getId());
         validationService.validateFilm(newFilm);
         Film updatedFilm = filmRepository.updateFilm(newFilm);
+        updatedFilm.setGenres(genreRepository.findGenreByFilmId(newFilm.getId()));
+        updatedFilm.setDirectors(directorRepository.findDirectorByFilmId(newFilm.getId()));
         log.info("Фильм с ID {} обновлен", newFilm.getId());
         return updatedFilm;
     }

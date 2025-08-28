@@ -8,10 +8,7 @@ import ru.yandex.practicum.filmorate.dao.BaseRepository;
 import ru.yandex.practicum.filmorate.dao.interfaces.ReviewRepository;
 import ru.yandex.practicum.filmorate.model.Review;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 @Qualifier("reviewRepository")
@@ -28,10 +25,7 @@ public class JdbcReviewRepository extends BaseRepository<Review> implements Revi
             update reviews
             set
                 content = :content,
-                is_positive = :isPositive,
-                user_id = :userId,
-                film_id = :filmId,
-                useful = :useful
+                is_positive = :isPositive
             where
                 review_id = :reviewId
             ;
@@ -59,6 +53,15 @@ public class JdbcReviewRepository extends BaseRepository<Review> implements Revi
                 from reviews
                 where
                     film_id = :filmId
+                order by useful desc
+                limit :count
+                ;
+            """;
+
+    private static final String GET_ALL_REVIEWS_QUERY = """
+                select
+                    *
+                from reviews
                 order by useful desc
                 limit :count
                 ;
@@ -102,16 +105,20 @@ public class JdbcReviewRepository extends BaseRepository<Review> implements Revi
 
     @Override
     public Review updateReview(Review review) {
+        Review newReview = getReviewById(review.getReviewId()).get();
+        //newReview.setUseful(review.getUseful());
+        newReview.setContent(review.getContent());
+        newReview.setIsPositive(review.getIsPositive());
         Map<String, Object> params = new HashMap<>();
         params.put("reviewId", review.getReviewId());
         params.put("content", review.getContent());
         params.put("isPositive", review.getIsPositive());
-        params.put("userId", review.getUserId());
-        params.put("filmId", review.getFilmId());
-        params.put("useful", review.getUseful());
+        //params.put("userId", review.getUserId());
+        //params.put("filmId", review.getFilmId());
+        //params.put("useful", review.getUseful());
 
         update(UPDATE_REVIEW_QUERY, params);
-        return review;
+        return newReview;
     }
 
     @Override
@@ -134,6 +141,13 @@ public class JdbcReviewRepository extends BaseRepository<Review> implements Revi
         params.put("filmId", filmId);
         params.put("count", count);
         return findMany(GET_POPULAR_REVIEWS_BY_FILM_ID_QUERY, params);
+    }
+
+    @Override
+    public Collection<Review> getAllReviews(int count) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("count", count);
+        return findMany(GET_ALL_REVIEWS_QUERY, params);
     }
 
     @Override

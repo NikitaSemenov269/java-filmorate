@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.dao.BaseRepository;
+import ru.yandex.practicum.filmorate.dao.interfaces.GenreRepository;
 import ru.yandex.practicum.filmorate.dao.interfaces.UserRepository;
 import ru.yandex.practicum.filmorate.mappers.FilmRowMapper;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -39,9 +40,11 @@ public class JdbcUserRepository extends BaseRepository<User> implements UserRepo
             AND l3.FILM_ID NOT IN (SELECT l4.film_id FROM LIKES l4
                 WHERE l4.USER_ID = :user_id)
             """;
+    private final GenreRepository genreRepository;
 
-    public JdbcUserRepository(NamedParameterJdbcOperations jdbc, RowMapper<User> mapper) {
+    public JdbcUserRepository(NamedParameterJdbcOperations jdbc, RowMapper<User> mapper, GenreRepository genreRepository) {
         super(jdbc, mapper);
+        this.genreRepository = genreRepository;
     }
 
     @Override
@@ -93,7 +96,11 @@ public class JdbcUserRepository extends BaseRepository<User> implements UserRepo
     public Collection<Film> getUserRecommendations(Long id) {
         Map<String, Object> params = new HashMap<>();
         params.put("user_id", id);
-        return jdbc.query(FIND_USER_RECOMMENDATIONS_QUERY, params, new FilmRowMapper());
+        Collection<Film> films = jdbc.query(FIND_USER_RECOMMENDATIONS_QUERY, params, new FilmRowMapper());
+        films.forEach(film -> {
+            film.setGenres(genreRepository.findGenreByFilmId(film.getId()));
+        });
+        return films;
     }
 }
 
