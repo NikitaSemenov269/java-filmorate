@@ -4,7 +4,6 @@ import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import ru.yandex.practicum.filmorate.annotation.ValidLogin;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -21,7 +20,6 @@ public class User {
     private String email;
     @NotBlank(message = "Логин обязателен для заполнения.")
     @Size(max = 30, message = "Логин пользователя не может быть больше 30 символов.")
-    @ValidLogin
     private String login;
     @Size(max = 30, message = "Имя пользователя не может быть больше 30 символов.")
     private String name;
