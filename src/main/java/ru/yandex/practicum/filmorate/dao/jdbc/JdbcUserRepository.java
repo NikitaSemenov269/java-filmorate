@@ -97,7 +97,9 @@ public class JdbcUserRepository extends BaseRepository<User> implements UserRepo
         Map<String, Object> params = new HashMap<>();
         params.put("user_id", id);
         Collection<Film> films = jdbc.query(FIND_USER_RECOMMENDATIONS_QUERY, params, new FilmRowMapper());
-        films.forEach(film -> {film.setGenres(genreRepository.findGenreByFilmId(film.getId()));});
+        films.forEach(film -> {
+            film.setGenres(genreRepository.findGenreByFilmId(film.getId()));
+        });
         return films;
     }
 }
