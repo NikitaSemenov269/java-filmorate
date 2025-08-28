@@ -1,6 +1,9 @@
 package ru.yandex.practicum.filmorate.model;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,12 +25,12 @@ public class Film {
     private String description;
     @NotNull(message = "Дата релиза обязательна")
     @MinReleaseDate
-    @PastOrPresent(message = "Фильм не может быть выпущен в будущем.")
     private LocalDate releaseDate;
     @Min(value = 1, message = "Длительность должна быть не менее 1 минуты.")
     private Integer duration;
     @NotNull(message = "Рейтинг MPA не может быть пустой")
     private MpaRating mpa;
+    private Set<Director> directors = new HashSet<>();
     private Set<Long> idUsersWhoLiked = new HashSet<>();
     private Set<Genre> genres = new HashSet<>();
 }

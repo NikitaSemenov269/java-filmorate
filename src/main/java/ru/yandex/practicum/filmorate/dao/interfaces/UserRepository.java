@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.dao.interfaces;
 
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.Collection;
@@ -15,4 +16,6 @@ public interface UserRepository {
     Optional<User> getUserById(Long id);
 
     boolean deleteUser(Long id);
+
+    Collection<Film> getUserRecommendations(Long id);
 }

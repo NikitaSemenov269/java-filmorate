@@ -39,7 +39,7 @@ public class ReviewService {
         validationService.validateReviewExists(review.getReviewId());
         Review newReview = reviewRepository.updateReview(review);
         log.info("Попытка записи: пользователь {} обновил отзыв {}", review.getUserId(), review.getReviewId());
-        eventService.addEvent(review.getUserId(), review.getReviewId(), 2L /* отзыв */, 3L /* обновление */);
+        eventService.addEvent(newReview.getUserId(), newReview.getReviewId(), 2L /* отзыв */, 3L /* обновление */);
         return newReview;
     }
 
@@ -57,8 +57,7 @@ public class ReviewService {
     public Review getReviewById(Long reviewId) {
         log.info("Попытка получения отзыва по ID: {}", reviewId);
         validationService.validateReviewExists(reviewId);
-        return reviewRepository.getReviewById(reviewId)
-                .orElseThrow(() -> new NotFoundException("Отзыв с ID " + reviewId + " не найден"));
+        return reviewRepository.getReviewById(reviewId).orElseThrow(() -> new NotFoundException("Отзыв с ID " + reviewId + " не найден"));
     }
 
     public Collection<Review> getPopularReviews(Long filmId, int count) {
@@ -66,7 +65,13 @@ public class ReviewService {
         if (count <= 0) {
             throw new ValidationException("Количество отзывов должно быть положительным числом.");
         }
-        return reviewRepository.getPopularReviews(filmId, count);
+        if (filmId == null) {
+            log.info("Получение всех отзывов в количестве: {}", count);
+            return reviewRepository.getAllReviews(count);
+        } else {
+            log.info("Получение отзывов для filmId: {} в количестве: {}", filmId, count);
+            return reviewRepository.getPopularReviews(filmId, count);
+        }
     }
 
     public void addLikeReview(Long reviewId, Long userId) {
@@ -87,7 +92,7 @@ public class ReviewService {
         log.info("Пользователь {} лайкнул отзыв {}", userId, reviewId);
         reviewRepository.addLikeReview(reviewId, userId);
         log.info("Попытка записи: пользователь {} поставил лайк {}", userId, reviewId);
-        eventService.addEvent(userId, reviewId, 1L /* лайк */, 2L /* добавление*/);
+        //eventService.addEvent(userId, reviewId, 1L /* лайк */, 2L /* добавление*/);
     }
 
     public void addDislikeReview(Long reviewId, Long userId) {
@@ -110,7 +115,7 @@ public class ReviewService {
         log.info("Пользователь {} дизлайкнул отзыв {}", userId, reviewId);
         reviewRepository.addDislikeReview(reviewId, userId);
         log.info("Попытка записи: пользователь {} ставит дизлайк {}", userId, reviewId);
-        eventService.addEvent(userId, reviewId, 2L /* дизлайк */, 2L /* добавление*/);
+        //eventService.addEvent(userId, reviewId, 2L /* дизлайк */, 2L /* добавление*/);
     }
 
     public void deleteLikeReview(Long reviewId, Long userId) {
@@ -123,7 +128,7 @@ public class ReviewService {
                 log.trace("Удаляем лайк отзыву {} от пользователя {}", reviewId, userId);
                 reviewRepository.addDislikeReview(reviewId, userId);
                 log.info("Попытка записи: пользователь {} удалил лайк {}", userId, reviewId);
-                eventService.addEvent(userId, reviewId, 1L /* лайк */, 1L /* удаление */);
+                //eventService.addEvent(userId, reviewId, 1L /* лайк */, 1L /* удаление */);
             }
         }
     }
@@ -138,7 +143,7 @@ public class ReviewService {
                 log.trace("Удаляем дизлайк отзыву {} от пользователя {}", reviewId, userId);
                 reviewRepository.addLikeReview(reviewId, userId);
                 log.info("Попытка записи: пользователь {} удалил дизлайк {}", userId, reviewId);
-                eventService.addEvent(userId, reviewId, 2L /* дизлайк */, 1L /* удаление */);
+                //eventService.addEvent(userId, reviewId, 2L /* дизлайк */, 1L /* удаление */);
             }
         }
     }
