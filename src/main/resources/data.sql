@@ -15,31 +15,15 @@ VALUES
     (5, 'Документальный'),
     (6, 'Боевик');
 
-MERGE INTO users (user_id, email, login, name, birthday)
+MERGE INTO event_type (type_id, event_type)
 VALUES
-    (1, 'user1@mail.ru', 'user1', 'User One', '1990-01-01'),
-    (2, 'user2@mail.ru', 'user2', 'User Two', '1995-05-15'),
-    (3, 'user3@mail.ru', 'user3', 'User Three', '2000-10-20');
+     (1, 'LIKE'),
+     (2, 'REVIEW'),
+     (3, 'FRIEND'),
+     (4, 'FEEDBACK');
 
-MERGE INTO films (film_id, name, description, release_date, duration, mpa_id)
+MERGE INTO event_operation (operation_id, operation_type)
 VALUES
-    (1, 'Film 1', 'Description 1', '2000-01-01', 120, 1),
-    (2, 'Film 2', 'Description 2', '2010-05-15', 90, 2);
-
-MERGE INTO film_genre (film_id, genre_id)
-VALUES
-    (1, 1),  -- Film 1: Комедия
-    (1, 2),  -- Film 1: Драма
-    (2, 2);  -- Film 2: Драма
-
-MERGE INTO friends (user_id, friend_id, confirmed)
-VALUES
-    (1, 2, TRUE),  -- user1 и user2 - подтвержденные друзья
-    (2, 1, TRUE),  -- обратная связь для дружбы
-    (1, 3, FALSE), -- user1 добавил user3, но не подтверждено
-    (3, 1, TRUE);  -- user3 добавил user1 и подтвердил
-
-MERGE INTO likes (film_id, user_id)
-VALUES
-    (1, 1), (1, 2),
-    (2, 1), (2, 3);
+    (1, 'REMOVE'),
+    (2, 'ADD'),
+    (3, 'UPDATE');

@@ -39,10 +39,21 @@ public class BaseRepository<T> {
     protected long insert(String query, Map<String, ?> params) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbc.update(query, new MapSqlParameterSource(params), keyHolder);
-
         Number key = keyHolder.getKey();
         if (key != null) {
             return key.longValue();
+        } else {
+            throw new InternalServerException("Не удалось сохранить данные");
+        }
+    }
+
+    //event
+    protected void safeInsert(String query, Map<String, ?> params) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbc.update(query, new MapSqlParameterSource(params), keyHolder, new String[]{"EVENT_ID"});
+        Number key = keyHolder.getKey();
+        if (key != null) {
+            key.longValue();
         } else {
             throw new InternalServerException("Не удалось сохранить данные");
         }

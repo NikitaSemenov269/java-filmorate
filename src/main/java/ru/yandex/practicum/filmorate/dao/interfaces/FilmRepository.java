@@ -9,7 +9,7 @@ public interface FilmRepository {
 
     Collection<Film> findAllFilms();
 
-    Collection<Film> getPopularFilms(int count);
+    Collection<Film> getPopularFilms(int count, Long genreId, int year);
 
     Film createFilm(Film film);
 
@@ -18,4 +18,16 @@ public interface FilmRepository {
     Optional<Film> getFilmById(Long id);
 
     boolean deleteFilm(Long id);
+
+    Collection<Film> getDirectorFilmsSortedByYear(Long directorId);
+
+    Collection<Film> getDirectorFilmsSortedByLikes(Long directorId);
+
+    Collection<Film> getCommonFilmsWithFriend(Long userId, Long friendId);
+
+    Collection<Film> getResultSearchForFilmsByTitle(String query);
+
+    Collection<Film> getResultSearchForFilmsByDirector(String query);
+
+    Collection<Film> getResultSearchForFilmsByDirectorAndTitle(String query);
 }
