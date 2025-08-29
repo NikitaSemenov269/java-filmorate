@@ -92,14 +92,11 @@ public class ReviewService {
         log.info("Пользователь {} лайкнул отзыв {}", userId, reviewId);
         reviewRepository.addLikeReview(reviewId, userId);
         log.info("Попытка записи: пользователь {} поставил лайк {}", userId, reviewId);
-        //eventService.addEvent(userId, reviewId, 1L /* лайк */, 2L /* добавление*/);
     }
 
     public void addDislikeReview(Long reviewId, Long userId) {
         log.info("Попытка добавления дизлайка: пользователь {} ставит дизлайк отзыву {}", userId, reviewId);
         validationService.validateReviewExists(reviewId);
-        /*Review review = reviewRepository.getReviewById(reviewId)
-                .orElseThrow(() -> new NotFoundException("Оценка с review_id " + reviewId + " не найдена"));*/
         Optional<Estimation> estimation = estimationRepository.getEstimation(reviewId, userId);
         if (estimation.isPresent()) {
             if (estimation.get().getIsLike().equals(Boolean.FALSE)) {
@@ -115,7 +112,6 @@ public class ReviewService {
         log.info("Пользователь {} дизлайкнул отзыв {}", userId, reviewId);
         reviewRepository.addDislikeReview(reviewId, userId);
         log.info("Попытка записи: пользователь {} ставит дизлайк {}", userId, reviewId);
-        //eventService.addEvent(userId, reviewId, 2L /* дизлайк */, 2L /* добавление*/);
     }
 
     public void deleteLikeReview(Long reviewId, Long userId) {
@@ -128,7 +124,6 @@ public class ReviewService {
                 log.trace("Удаляем лайк отзыву {} от пользователя {}", reviewId, userId);
                 reviewRepository.addDislikeReview(reviewId, userId);
                 log.info("Попытка записи: пользователь {} удалил лайк {}", userId, reviewId);
-                //eventService.addEvent(userId, reviewId, 1L /* лайк */, 1L /* удаление */);
             }
         }
     }
@@ -143,7 +138,6 @@ public class ReviewService {
                 log.trace("Удаляем дизлайк отзыву {} от пользователя {}", reviewId, userId);
                 reviewRepository.addLikeReview(reviewId, userId);
                 log.info("Попытка записи: пользователь {} удалил дизлайк {}", userId, reviewId);
-                //eventService.addEvent(userId, reviewId, 2L /* дизлайк */, 1L /* удаление */);
             }
         }
     }

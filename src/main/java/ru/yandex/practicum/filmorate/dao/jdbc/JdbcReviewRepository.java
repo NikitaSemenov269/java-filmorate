@@ -106,16 +106,12 @@ public class JdbcReviewRepository extends BaseRepository<Review> implements Revi
     @Override
     public Review updateReview(Review review) {
         Review newReview = getReviewById(review.getReviewId()).get();
-        //newReview.setUseful(review.getUseful());
         newReview.setContent(review.getContent());
         newReview.setIsPositive(review.getIsPositive());
         Map<String, Object> params = new HashMap<>();
         params.put("reviewId", review.getReviewId());
         params.put("content", review.getContent());
         params.put("isPositive", review.getIsPositive());
-        //params.put("userId", review.getUserId());
-        //params.put("filmId", review.getFilmId());
-        //params.put("useful", review.getUseful());
 
         update(UPDATE_REVIEW_QUERY, params);
         return newReview;
